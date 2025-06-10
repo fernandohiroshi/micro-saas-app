@@ -36,7 +36,7 @@ export function Header() {
             href={item.href}
             className="flex items-center hover:text-cyan-500 duration-200 ease-in-out"
           >
-            <item.icon className="text-cyan-500" />
+            <item.icon className="text-cyan-600" />
             {item.label}
           </Link>
         </Button>
@@ -45,7 +45,7 @@ export function Header() {
       {session ? (
         <Link href="/dashboard">Acessar clinica</Link>
       ) : (
-        <Button className="cursor-pointer">
+        <Button>
           <LogIn />
           Login
         </Button>
@@ -57,7 +57,7 @@ export function Header() {
     <header className="fixed top-0 right-0 left-0 z-[999] py-6 px-4 bg-white">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="text-3xl text-neutral-900 font-bold">
-          Dent<span className="text-cyan-500">PRO</span>
+          Dent<span className="text-cyan-600">PRO</span>
         </Link>
 
         {/* DESKTOP */}
@@ -69,7 +69,7 @@ export function Header() {
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className="md:hidden">
             <Button
-              className="text-neutral-900 hover:bg-transparent cursor-pointer"
+              className="text-neutral-900 hover:bg-transparent"
               variant="outline"
             >
               <Menu />
