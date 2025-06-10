@@ -9,12 +9,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Handshake, Mail, Menu } from "lucide-react";
+import { Handshake, LogIn, Mail, Menu } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+
+  const session = null;
 
   const navItems = [
     { href: "#profissionais", label: "Profissionais", icon: Handshake },
@@ -28,18 +30,31 @@ export function Header() {
           onClick={() => setIsOpen(false)}
           key={item.href}
           asChild
-          className="bg-transparent hover:bg-transparent text-neutral-900 shadow-none"
+          className="bg-transparent hover:bg-transparent text-neutral-900 shadow-none flex items-center justify-start text-base md:text-lg"
         >
-          <Link href={item.href} className="flex items-center">
-            <item.icon className="text-cyan-500" /> {item.label}
+          <Link
+            href={item.href}
+            className="flex items-center hover:text-cyan-500 duration-200 ease-in-out"
+          >
+            <item.icon className="text-cyan-500" />
+            {item.label}
           </Link>
         </Button>
       ))}
+
+      {session ? (
+        <Link href="/dashboard">Acessar clinica</Link>
+      ) : (
+        <Button className="cursor-pointer">
+          <LogIn />
+          Login
+        </Button>
+      )}
     </>
   );
 
   return (
-    <header className="fixed top-0 right-0 left-0 z-[999] py-4 px-4">
+    <header className="fixed top-0 right-0 left-0 z-[999] py-6 px-4 bg-white">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="text-3xl text-neutral-900 font-bold">
           Dent<span className="text-cyan-500">PRO</span>
@@ -54,9 +69,8 @@ export function Header() {
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className="md:hidden">
             <Button
-              className="text-neutral-900 hover:bg-transparent"
+              className="text-neutral-900 hover:bg-transparent cursor-pointer"
               variant="outline"
-              size="icon"
             >
               <Menu />
             </Button>
@@ -70,7 +84,7 @@ export function Header() {
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
 
-            <nav className="flex flex-col items-start md:hidden">
+            <nav className="flex flex-col md:hidden space-y-4 px-2 mt-4">
               <NavLinks />
             </nav>
           </SheetContent>
