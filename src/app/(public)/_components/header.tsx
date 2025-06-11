@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -45,7 +46,7 @@ export function Header() {
       {session ? (
         <Link href="/dashboard">Acessar clinica</Link>
       ) : (
-        <Button>
+        <Button className="mt-4">
           <LogIn />
           Login
         </Button>
@@ -78,12 +79,10 @@ export function Header() {
             className="w-[240px] sm:w-[300px] z-[9999]"
           >
             <SheetHeader>
-              <SheetTitle>Menu</SheetTitle>
-            </SheetHeader>
-
-            <nav className="flex flex-col md:hidden space-y-4 px-2 mt-4">
+              <SheetTitle className="mb-8">Menu</SheetTitle>
+              <SheetClose />
               <NavLinks />
-            </nav>
+            </SheetHeader>
           </SheetContent>
         </Sheet>
       </div>
