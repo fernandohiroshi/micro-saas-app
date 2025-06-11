@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -30,13 +29,14 @@ export function Header() {
           onClick={() => setIsOpen(false)}
           key={item.href}
           asChild
-          className="bg-transparent hover:bg-transparent text-neutral-900 shadow-none flex items-center justify-start text-base md:text-lg"
+          variant="ghost"
+          className="flex items-center justify-start text-sm md:text-base"
         >
           <Link
             href={item.href}
             className="flex items-center hover:text-cyan-500 duration-200 ease-in-out"
           >
-            <item.icon className="text-cyan-600" />
+            <item.icon />
             {item.label}
           </Link>
         </Button>
@@ -56,8 +56,8 @@ export function Header() {
   return (
     <header className="fixed top-0 right-0 left-0 z-[999] py-6 px-4 bg-white">
       <div className="container mx-auto flex items-center justify-between">
-        <Link href="/" className="text-3xl text-neutral-900 font-bold">
-          Dent<span className="text-cyan-600">PRO</span>
+        <Link href="/" className="text-3xl font-bold">
+          Plan<span className="text-cyan-600">C</span>
         </Link>
 
         {/* DESKTOP */}
@@ -68,10 +68,7 @@ export function Header() {
         {/* MOBILE */}
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className="md:hidden">
-            <Button
-              className="text-neutral-900 hover:bg-transparent"
-              variant="outline"
-            >
+            <Button className="hover:bg-transparent" variant="outline">
               <Menu />
             </Button>
           </SheetTrigger>
