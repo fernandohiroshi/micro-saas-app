@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DentPro",
+  title: "PlanC",
   description: "Desenvolvido por Fernando Hiroshi - Konbini Code.",
+  icons: "/logo.png",
 };
 
 export default function RootLayout({

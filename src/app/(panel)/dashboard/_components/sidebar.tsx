@@ -15,8 +15,24 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Banknote, CalendarCheck, Folder, List, User } from "lucide-react";
+import {
+  Banknote,
+  CalendarCheck,
+  ChevronLeft,
+  ChevronRight,
+  Folder,
+  List,
+  User,
+} from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import Logo from "../../../../../public/logo.png";
+
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 export default function Sidebar({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -24,6 +40,91 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen w-full">
+      <aside
+        className={clsx(
+          "flex flex-col border-r bg-background transition-all duration-300 p-4 h-full",
+          {
+            "w-20": isCollapsed,
+            "w-64": !isCollapsed,
+            "hidden md:flex md:fixed": true,
+          }
+        )}
+      >
+        <div className="mt-4 mb-6">
+          {!isCollapsed ? (
+            <h2 className="text-4xl font-bold ">
+              Plan<span className="text-cyan-600">C</span>
+            </h2>
+          ) : (
+            <Image
+              src={Logo}
+              alt="Logo"
+              priority
+              quality={100}
+              style={{
+                width: "auto",
+                height: "auto",
+              }}
+            />
+          )}
+        </div>
+
+        <Button
+          className="self-end bg-neutral-200 hover:bg-neutral-300 mb-2"
+          variant="outline"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
+          {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
+        </Button>
+
+        <Collapsible open={!isCollapsed}>
+          <CollapsibleContent>
+            <nav className="flex flex-col gap-1 overflow-hidden">
+              <span className="text-sm text-neutral-400 font-medium uppercase mt-1">
+                Painel
+              </span>
+
+              <SidebarLink
+                href="/dashboard"
+                label="Agendamento"
+                pathname={pathname}
+                isCollapses={isCollapsed}
+                icon={<CalendarCheck />}
+              />
+
+              <SidebarLink
+                href="/dashboard/services"
+                label="Serviços"
+                pathname={pathname}
+                isCollapses={isCollapsed}
+                icon={<Folder />}
+              />
+
+              <span className="text-sm text-neutral-400 font-medium uppercase mt-1">
+                Configurações
+              </span>
+
+              <SidebarLink
+                href="/dashboard/profile"
+                label="Meu perfil"
+                pathname={pathname}
+                isCollapses={isCollapsed}
+                icon={<User />}
+              />
+
+              <SidebarLink
+                href="/dashboard/plans"
+                label="Planos"
+                pathname={pathname}
+                isCollapses={isCollapsed}
+                icon={<Banknote />}
+              />
+            </nav>
+          </CollapsibleContent>
+        </Collapsible>
+      </aside>
+
+      {/* MOBILE */}
       <div
         className={clsx(
           "flex flex-1 flex-col transition-all duration-300 ease-in-out",
