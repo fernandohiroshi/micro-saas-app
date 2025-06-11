@@ -8,13 +8,11 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <Header />
 
-      <div>
+      <main>
         <Hero />
-
         <Professionals />
-
         <Footer />
-      </div>
+      </main>
     </div>
   );
 }
