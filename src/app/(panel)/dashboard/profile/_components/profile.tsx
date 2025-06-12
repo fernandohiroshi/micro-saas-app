@@ -1,13 +1,21 @@
 "use client";
 
-import { useProfileForm } from "./profile-form";
+import { useState } from "react";
 import Image from "next/image";
 import img from "../../../../../../public/home-grid/02.jpg";
 
+// Hooks
+import { ProfileFormData, useProfileForm } from "./profile-form";
+
+// Libs
+import { ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+// UI Components
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 import {
   Form,
   FormControl,
@@ -16,7 +24,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import {
   Select,
   SelectContent,
@@ -24,7 +31,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
 import {
   Dialog,
   DialogClose,
@@ -34,10 +40,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
 
 export function ProfileContent() {
   const [selectedHours, setSelectedHours] = useState<string[]>([]);
@@ -45,7 +47,7 @@ export function ProfileContent() {
 
   const form = useProfileForm();
 
-  //   TIMES FUNCTION
+  // Generate available time slots from 08:00 to 22:30 (every 30 minutes)
   function generateTimeSlots(): string[] {
     const hours: string[] = [];
 
@@ -62,7 +64,7 @@ export function ProfileContent() {
 
   const hours = generateTimeSlots();
 
-  //   TIMES STATES
+  // Toggle time selection (add or remove)
   function toggleHour(hour: string) {
     setSelectedHours((prev) =>
       prev.includes(hour)
@@ -71,6 +73,7 @@ export function ProfileContent() {
     );
   }
 
+  // Filter available time zones
   const timeZones = Intl.supportedValuesOf("timeZone").filter(
     (zone) =>
       zone.startsWith("America/Sao_Paulo") ||
@@ -82,10 +85,17 @@ export function ProfileContent() {
       zone.startsWith("America/Cuiaba")
   );
 
+  async function onSubmit(values: ProfileFormData) {
+    const profileDatas = {
+      ...values,
+      times: selectedHours,
+    };
+  }
+
   return (
     <section className="mx-auto">
       <Form {...form}>
-        <form>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card>
             <CardHeader>
               <CardTitle className="text-xl uppercase">Meus dados</CardTitle>
@@ -183,7 +193,7 @@ export function ProfileContent() {
                   )}
                 />
 
-                {/* TIME MODAL */}
+                {/* TIME SELECTION MODAL */}
                 <div className="space-y-2">
                   <Label className="font-semibold">Configurar Horários:</Label>
 
@@ -241,7 +251,7 @@ export function ProfileContent() {
                   </Dialog>
                 </div>
 
-                {/* TIME ZONE */}
+                {/* TIME ZONE SELECTION */}
                 <FormField
                   control={form.control}
                   name="timeZone"
@@ -271,6 +281,7 @@ export function ProfileContent() {
                   )}
                 />
 
+                {/* SUBMIT BUTTON */}
                 <Button type="submit" className="w-full">
                   Salvar alterações
                 </Button>
