@@ -1,9 +1,12 @@
 "use client";
 
 import { useProfileForm } from "./profile-form";
+import Image from "next/image";
+import img from "../../../../../../public/home-grid/02.jpg";
+
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import img from "../../../../../../public/home-grid/02.jpg";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import {
   Form,
@@ -22,8 +25,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
+
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 export function ProfileContent() {
   const form = useProfileForm();
@@ -55,13 +68,14 @@ export function ProfileContent() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-semibold">Nome</FormLabel>
+                      <FormLabel className="font-semibold">Nome:</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           placeholder="Digite o nome da clínica ..."
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -72,10 +86,11 @@ export function ProfileContent() {
                   name="address"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-semibold">Endereço</FormLabel>
+                      <FormLabel className="font-semibold">Endereço:</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="Digite o endereço ..." />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -86,10 +101,11 @@ export function ProfileContent() {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-semibold">Telefone</FormLabel>
+                      <FormLabel className="font-semibold">Telefone:</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="Digite o telefone ..." />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -101,14 +117,14 @@ export function ProfileContent() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="font-semibold">
-                        Status da clínica
+                        Status da clínica:
                       </FormLabel>
                       <FormControl>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value ? "active" : "inactive"}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="w-full">
                             <SelectValue placeholder="Selecione o status da clínica" />
                           </SelectTrigger>
                           <SelectContent>
@@ -125,6 +141,39 @@ export function ProfileContent() {
                     </FormItem>
                   )}
                 />
+
+                {/* TIME MODAL */}
+
+                <div className="space-y-2">
+                  <Label className="font-semibold">Configurar Horários:</Label>
+
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between"
+                      >
+                        Clique aqui para selecionar horários
+                        <ArrowRight />
+                      </Button>
+                    </DialogTrigger>
+
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Horários da clinica</DialogTitle>
+                        <DialogClose />
+                        <DialogDescription>
+                          Selecione abaixo os horários de funcionamento da
+                          clínica
+                        </DialogDescription>
+                      </DialogHeader>
+
+                      <section className="py-4">
+                        <p>Clique nos horários para marcar ou desmarcar :</p>
+                      </section>
+                    </DialogContent>
+                  </Dialog>
+                </div>
               </div>
             </CardContent>
           </Card>
