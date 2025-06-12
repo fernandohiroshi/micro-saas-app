@@ -9,7 +9,6 @@ import {
   SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -28,11 +27,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Logo from "../../../../../public/logo.png";
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
 
 export default function Sidebar({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -76,6 +71,42 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
         >
           {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
         </Button>
+
+        {isCollapsed && (
+          <nav className="flex flex-col gap-1 overflow-hidden mt-2">
+            <SidebarLink
+              href="/dashboard"
+              label="Agendamento"
+              pathname={pathname}
+              isCollapses={isCollapsed}
+              icon={<CalendarCheck />}
+            />
+
+            <SidebarLink
+              href="/dashboard/services"
+              label="Serviços"
+              pathname={pathname}
+              isCollapses={isCollapsed}
+              icon={<Folder />}
+            />
+
+            <SidebarLink
+              href="/dashboard/profile"
+              label="Meu perfil"
+              pathname={pathname}
+              isCollapses={isCollapsed}
+              icon={<User />}
+            />
+
+            <SidebarLink
+              href="/dashboard/plans"
+              label="Planos"
+              pathname={pathname}
+              isCollapses={isCollapsed}
+              icon={<Banknote />}
+            />
+          </nav>
+        )}
 
         <Collapsible open={!isCollapsed}>
           <CollapsibleContent>
