@@ -169,7 +169,11 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
           <Sheet>
             <div className="flex items-center gap-2">
               <SheetTrigger asChild>
-                <Button variant="outline" className="md:hidden">
+                <Button
+                  variant="outline"
+                  className="md:hidden"
+                  onClick={() => setIsCollapsed(false)}
+                >
                   <List />
                 </Button>
               </SheetTrigger>
