@@ -1,5 +1,8 @@
 "use client";
 
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -10,18 +13,20 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Handshake, LogIn, Mail, Menu } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
+import { handleRegister } from "../_actions/login";
 
 export function Header() {
+  const { data: session, status } = useSession();
   const [isOpen, setIsOpen] = useState(false);
-
-  const session = null;
 
   const navItems = [
     { href: "#profissionais", label: "Profissionais", icon: Handshake },
     { href: "/contato", label: "Contatos", icon: Mail },
   ];
+
+  async function handleLogin() {
+    await handleRegister("github");
+  }
 
   const NavLinks = () => (
     <>
@@ -35,7 +40,7 @@ export function Header() {
         >
           <Link
             href={item.href}
-            className="flex items-center hover:text-cyan-600 duration-200 ease-in-out"
+            className="flex items-center hover:text-cyan-600 duration-200 ease-in-out font-semibold"
           >
             <item.icon />
             {item.label}
@@ -43,10 +48,14 @@ export function Header() {
         </Button>
       ))}
 
-      {session ? (
-        <Link href="/dashboard">Acessar clinica</Link>
+      {status === "loading" ? (
+        <></>
+      ) : session ? (
+        <Button variant="outline" asChild className="font-semibold">
+          <Link href="/dashboard">Dashboard</Link>
+        </Button>
       ) : (
-        <Button className="mt-4 md:mt-0">
+        <Button className="mt-4 md:mt-0" onClick={handleLogin}>
           <LogIn />
           Login
         </Button>
