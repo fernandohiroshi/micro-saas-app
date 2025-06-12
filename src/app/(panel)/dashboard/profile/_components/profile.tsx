@@ -11,7 +11,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -42,6 +41,7 @@ import { cn } from "@/lib/utils";
 
 export function ProfileContent() {
   const [selectedHours, setSelectedHours] = useState<string[]>([]);
+  const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
   const form = useProfileForm();
 
@@ -70,6 +70,17 @@ export function ProfileContent() {
         : [...prev, hour].sort()
     );
   }
+
+  const timeZones = Intl.supportedValuesOf("timeZone").filter(
+    (zone) =>
+      zone.startsWith("America/Sao_Paulo") ||
+      zone.startsWith("America/Fortaleza") ||
+      zone.startsWith("America/Recife") ||
+      zone.startsWith("America/Bahia") ||
+      zone.startsWith("America/Belem") ||
+      zone.startsWith("America/Manaus") ||
+      zone.startsWith("America/Cuiaba")
+  );
 
   return (
     <section className="mx-auto">
@@ -176,11 +187,11 @@ export function ProfileContent() {
                 <div className="space-y-2">
                   <Label className="font-semibold">Configurar Horários:</Label>
 
-                  <Dialog>
+                  <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
                     <DialogTrigger asChild>
                       <Button
                         variant="outline"
-                        className="w-full justify-between"
+                        className="w-full justify-between font-normal"
                       >
                         Clique aqui para selecionar horários
                         <ArrowRight />
@@ -219,9 +230,50 @@ export function ProfileContent() {
                           ))}
                         </div>
                       </section>
+
+                      <Button
+                        className="w-full"
+                        onClick={() => setDialogIsOpen(false)}
+                      >
+                        Finalizar
+                      </Button>
                     </DialogContent>
                   </Dialog>
                 </div>
+
+                {/* TIME ZONE */}
+                <FormField
+                  control={form.control}
+                  name="timeZone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-semibold">
+                        Selecione o fuso horário
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Selecione o seu fuso horário" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {timeZones.map((zone) => (
+                              <SelectItem key={zone} value={zone}>
+                                {zone}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <Button type="submit" className="w-full">
+                  Salvar alterações
+                </Button>
               </div>
             </CardContent>
           </Card>
