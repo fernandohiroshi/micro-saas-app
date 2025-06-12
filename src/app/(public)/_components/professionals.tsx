@@ -67,7 +67,7 @@ export default function Professionals() {
         <section className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
           {clinics.map((clinic, index) => (
             <Card
-              className="p-0 hover:bg-cyan-50 ease-in-out duration-300"
+              className="p-0 hover:bg-cyan-100 ease-in-out duration-500"
               key={index}
             >
               <CardContent className="p-0">
@@ -77,7 +77,7 @@ export default function Professionals() {
                       src={clinic.image}
                       alt={`Foto da ${clinic.name}`}
                       fill
-                      className="object-cover hover:scale-110 ease-in-out duration-300"
+                      className="object-cover hover:scale-110 ease-in-out duration-500"
                     />
                   </div>
                 </div>
