@@ -110,7 +110,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 
         <Collapsible open={!isCollapsed}>
           <CollapsibleContent>
-            <nav className="flex flex-col gap-1 overflow-hidden">
+            <nav className="flex flex-col gap-2 overflow-hidden">
               <span className="text-sm text-neutral-400 font-medium uppercase mt-1">
                 Painel
               </span>
@@ -254,18 +254,19 @@ function SidebarLink({
 }: SidebarLinkProps) {
   return (
     <Link href={href}>
-      <div
+      <Button
+        variant="outline"
         className={clsx(
-          "flex items-center gap-2 px-3 py-2 rounded-md font-semibold",
+          "flex items-center justify-start gap-2 px-3 py-2 rounded-md font-semibold w-full ",
           {
-            "bg-cyan-500 text-white": pathname === href,
+            "bg-cyan-100 hover:bg-cyan-100 text-white": pathname === href,
             "text-black": pathname === href,
           }
         )}
       >
         <span>{icon}</span>
         {!isCollapses && <span>{label}</span>}
-      </div>
+      </Button>
     </Link>
   );
 }

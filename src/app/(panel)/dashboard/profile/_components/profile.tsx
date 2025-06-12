@@ -37,9 +37,39 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export function ProfileContent() {
+  const [selectedHours, setSelectedHours] = useState<string[]>([]);
+
   const form = useProfileForm();
+
+  //   TIMES FUNCTION
+  function generateTimeSlots(): string[] {
+    const hours: string[] = [];
+
+    for (let i = 8; i <= 22; i++) {
+      for (let j = 0; j < 2; j++) {
+        const hour = i.toString().padStart(2, "0");
+        const minuts = (j * 30).toString().padStart(2, "0");
+        hours.push(`${hour}:${minuts}`);
+      }
+    }
+
+    return hours;
+  }
+
+  const hours = generateTimeSlots();
+
+  //   TIMES STATES
+  function toggleHour(hour: string) {
+    setSelectedHours((prev) =>
+      prev.includes(hour)
+        ? prev.filter((h) => h !== hour)
+        : [...prev, hour].sort()
+    );
+  }
 
   return (
     <section className="mx-auto">
@@ -143,7 +173,6 @@ export function ProfileContent() {
                 />
 
                 {/* TIME MODAL */}
-
                 <div className="space-y-2">
                   <Label className="font-semibold">Configurar Horários:</Label>
 
@@ -169,7 +198,26 @@ export function ProfileContent() {
                       </DialogHeader>
 
                       <section className="py-4">
-                        <p>Clique nos horários para marcar ou desmarcar :</p>
+                        <p className="mb-2">
+                          Clique nos horários para marcar ou desmarcar:
+                        </p>
+
+                        <div className="grid grid-cols-5 gap-2">
+                          {hours.map((hour) => (
+                            <Button
+                              key={hour}
+                              variant="outline"
+                              className={cn(
+                                "h-10",
+                                selectedHours.includes(hour) &&
+                                  "border-cyan-500 border-2"
+                              )}
+                              onClick={() => toggleHour(hour)}
+                            >
+                              {hour}
+                            </Button>
+                          ))}
+                        </div>
                       </section>
                     </DialogContent>
                   </Dialog>

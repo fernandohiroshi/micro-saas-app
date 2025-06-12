@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { SessionAuthProvider } from "@/components/session-auth";
-import { Raleway } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 
-const raleway = Raleway({ subsets: ["latin"] });
+const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "PlanC",
@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${raleway.className} antialiased`}>
+      <body className={`${montserrat.className} antialiased`}>
         <SessionAuthProvider>{children}</SessionAuthProvider>
       </body>
     </html>
