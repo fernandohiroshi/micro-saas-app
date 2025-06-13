@@ -46,7 +46,6 @@ import {
 } from "@/components/ui/select";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -143,7 +142,9 @@ export function ProfileContent({ user }: ProfileContentProps) {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card>
             <CardHeader>
-              <CardTitle className="text-xl uppercase">Meus dados</CardTitle>
+              <CardTitle className="text-xl md:text-2xl font-bold">
+                Meus dados
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex justify-center">
@@ -263,7 +264,6 @@ export function ProfileContent({ user }: ProfileContentProps) {
                     <DialogContent>
                       <DialogHeader>
                         <DialogTitle>Horários da clinica</DialogTitle>
-                        <DialogClose />
                         <DialogDescription>
                           Selecione abaixo os horários de funcionamento da
                           clínica

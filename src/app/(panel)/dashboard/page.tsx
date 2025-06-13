@@ -8,12 +8,5 @@ export default async function Dashboard() {
     redirect("/");
   }
 
-  return (
-    <section>
-      dashboard
-      <div className="w-full h-[600px] bg-neutral-200 mb-10"></div>
-      <div className="w-full h-[600px] bg-neutral-200 mb-10"></div>
-      <div className="w-full h-[600px] bg-neutral-200 mb-10"></div>
-    </section>
-  );
+  return <section>dashboard</section>;
 }

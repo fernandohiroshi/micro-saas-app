@@ -24,7 +24,6 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -192,7 +191,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
                 <SheetTitle>
                   Plan<span className="text-cyan-600">C</span>
                 </SheetTitle>
-                <SheetClose />
+
                 <SheetDescription className="mb-6">
                   Menu Administrativo
                 </SheetDescription>
