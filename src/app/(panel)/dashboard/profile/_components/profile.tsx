@@ -2,15 +2,20 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import img from "../../../../../../public/home-grid/02.jpg";
+import userImage from "../../../../../../public/user.png";
+
+// Types
 import { Prisma } from "@/generated/prisma";
+
+// Actions
+import { updateProfile } from "../_actions/update-profile";
 
 // Hooks
 import { ProfileFormData, useProfileForm } from "./profile-form";
 
 // Libs
-import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
 
 // UI Components
 import { Label } from "@/components/ui/label";
@@ -104,11 +109,16 @@ export function ProfileContent({ user }: ProfileContentProps) {
       zone.startsWith("America/Cuiaba")
   );
 
+  // Handle form submission and update user profile data
   async function onSubmit(values: ProfileFormData) {
-    const profileDatas = {
-      ...values,
-      times: selectedHours,
-    };
+    const response = await updateProfile({
+      name: values.name,
+      address: values.address,
+      phone: values.phone,
+      status: values.status === "active" ? true : false,
+      timeZone: values.timeZone,
+      times: selectedHours || [],
+    });
   }
 
   return (
@@ -123,7 +133,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
               <div className="flex justify-center">
                 <div className="relative h-40 w-40 rounded-full overflow-hidden shadow">
                   <Image
-                    src={img}
+                    src={user.image ? user.image : userImage}
                     alt="Profile Image"
                     fill
                     className="object-cover"

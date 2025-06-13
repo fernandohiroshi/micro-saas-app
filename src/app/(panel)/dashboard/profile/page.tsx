@@ -1,6 +1,13 @@
+// Imports
 import { redirect } from "next/navigation";
+
+// Libs
 import getSession from "@/lib/getSession";
+
+// Data
 import { getUserData } from "./_data-access/get-info-user";
+
+// Components
 import { ProfileContent } from "./_components/profile";
 
 export default async function Profile() {
@@ -11,7 +18,6 @@ export default async function Profile() {
   }
 
   const user = await getUserData({ userId: session.user?.id });
-  // console.log("getUserData: ", user);
 
   if (!user) {
     redirect("/");
