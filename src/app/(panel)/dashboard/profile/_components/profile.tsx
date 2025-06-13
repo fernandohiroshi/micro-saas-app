@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import img from "../../../../../../public/home-grid/02.jpg";
+import { Prisma } from "@/generated/prisma";
 
 // Hooks
 import { ProfileFormData, useProfileForm } from "./profile-form";
@@ -41,11 +42,29 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-export function ProfileContent() {
-  const [selectedHours, setSelectedHours] = useState<string[]>([]);
+type UserWithSubscription = Prisma.UserGetPayload<{
+  include: {
+    subscription: true;
+  };
+}>;
+
+interface ProfileContentProps {
+  user: UserWithSubscription;
+}
+
+export function ProfileContent({ user }: ProfileContentProps) {
+  const [selectedHours, setSelectedHours] = useState<string[]>(
+    user.times ?? []
+  );
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
-  const form = useProfileForm();
+  const form = useProfileForm({
+    name: user.name,
+    address: user.address,
+    phone: user.phone,
+    status: user.status,
+    timeZone: user.timeZone,
+  });
 
   // Generate available time slots from 08:00 to 22:30 (every 30 minutes)
   function generateTimeSlots(): string[] {
