@@ -1,7 +1,10 @@
 "use client";
 
+// React & Next
 import { useState } from "react";
 import Image from "next/image";
+
+//Image
 import userImage from "../../../../../../public/user.png";
 
 // Types
@@ -16,6 +19,10 @@ import { ProfileFormData, useProfileForm } from "./profile-form";
 // Libs
 import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
+import { toast } from "sonner";
+
+// Utils
+import { extractPhoneNumber, formatPhone } from "@/utils/formatPhone";
 
 // UI Components
 import { Label } from "@/components/ui/label";
@@ -111,6 +118,8 @@ export function ProfileContent({ user }: ProfileContentProps) {
 
   // Handle form submission and update user profile data
   async function onSubmit(values: ProfileFormData) {
+    const extractValue = extractPhoneNumber(values.phone || "");
+
     const response = await updateProfile({
       name: values.name,
       address: values.address,
@@ -119,6 +128,13 @@ export function ProfileContent({ user }: ProfileContentProps) {
       timeZone: values.timeZone,
       times: selectedHours || [],
     });
+
+    if (response.error) {
+      toast.error(response.error, { closeButton: true });
+      return;
+    }
+
+    toast.success(response.data);
   }
 
   return (
@@ -183,7 +199,14 @@ export function ProfileContent({ user }: ProfileContentProps) {
                     <FormItem>
                       <FormLabel className="font-semibold">Telefone:</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="Digite o telefone ..." />
+                        <Input
+                          {...field}
+                          placeholder="Digite o telefone ..."
+                          onChange={(e) => {
+                            const formattedValue = formatPhone(e.target.value);
+                            field.onChange(formattedValue);
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -311,9 +334,11 @@ export function ProfileContent({ user }: ProfileContentProps) {
                 />
 
                 {/* SUBMIT BUTTON */}
-                <Button type="submit" className="w-full">
-                  Salvar alterações
-                </Button>
+                <div className="flex justify-end">
+                  <Button type="submit" className="w-fit">
+                    Salvar alterações
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>

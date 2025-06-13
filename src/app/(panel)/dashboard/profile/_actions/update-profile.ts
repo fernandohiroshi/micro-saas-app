@@ -6,6 +6,7 @@ import { z } from "zod";
 // App
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 // Schema
 const formSchema = z.object({
@@ -52,8 +53,10 @@ export async function updateProfile(formData: FormSchema) {
       },
     });
 
+    revalidatePath("/dashboard/profile");
+
     return {
-      data: "Atualizado com sucesso",
+      data: "Dados Atualizado!",
     };
   } catch (err) {
     return {
