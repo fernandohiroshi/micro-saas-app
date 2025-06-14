@@ -4,7 +4,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-//Image
+// Image
 import userImage from "../../../../../../public/user.png";
 
 // Types
@@ -53,6 +53,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+// Extended user type with subscription
 type UserWithSubscription = Prisma.UserGetPayload<{
   include: {
     subscription: true;
@@ -64,11 +65,15 @@ interface ProfileContentProps {
 }
 
 export function ProfileContent({ user }: ProfileContentProps) {
+  // State to manage selected time slots
   const [selectedHours, setSelectedHours] = useState<string[]>(
     user.times ?? []
   );
+
+  // Dialog modal visibility
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
+  // Initialize form with user data
   const form = useProfileForm({
     name: user.name,
     address: user.address,
@@ -77,15 +82,15 @@ export function ProfileContent({ user }: ProfileContentProps) {
     timeZone: user.timeZone,
   });
 
-  // Generate available time slots from 08:00 to 22:30 (every 30 minutes)
+  // Generate time slots from 08:00 to 22:30 (every 30 min)
   function generateTimeSlots(): string[] {
     const hours: string[] = [];
 
     for (let i = 8; i <= 22; i++) {
       for (let j = 0; j < 2; j++) {
         const hour = i.toString().padStart(2, "0");
-        const minuts = (j * 30).toString().padStart(2, "0");
-        hours.push(`${hour}:${minuts}`);
+        const minutes = (j * 30).toString().padStart(2, "0");
+        hours.push(`${hour}:${minutes}`);
       }
     }
 
@@ -94,7 +99,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
 
   const hours = generateTimeSlots();
 
-  // Toggle time selection (add or remove)
+  // Toggle selected hour in the time slot list
   function toggleHour(hour: string) {
     setSelectedHours((prev) =>
       prev.includes(hour)
@@ -103,7 +108,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
     );
   }
 
-  // Filter available time zones
+  // Filter time zones relevant to Brazil
   const timeZones = Intl.supportedValuesOf("timeZone").filter(
     (zone) =>
       zone.startsWith("America/Sao_Paulo") ||
@@ -115,7 +120,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
       zone.startsWith("America/Cuiaba")
   );
 
-  // Handle form submission and update user profile data
+  // Handle form submission
   async function onSubmit(values: ProfileFormData) {
     const extractValue = extractPhoneNumber(values.phone || "");
 
@@ -146,7 +151,9 @@ export function ProfileContent({ user }: ProfileContentProps) {
                 Meus dados
               </CardTitle>
             </CardHeader>
+
             <CardContent className="space-y-6">
+              {/* Profile picture */}
               <div className="flex justify-center">
                 <div className="relative h-40 w-40 rounded-full overflow-hidden shadow">
                   <Image
@@ -159,7 +166,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
               </div>
 
               <div className="space-y-4">
-                {/* NAME */}
+                {/* Name field */}
                 <FormField
                   control={form.control}
                   name="name"
@@ -177,7 +184,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                   )}
                 />
 
-                {/* ADDRESS */}
+                {/* Address field */}
                 <FormField
                   control={form.control}
                   name="address"
@@ -192,7 +199,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                   )}
                 />
 
-                {/* PHONE */}
+                {/* Phone field with formatting */}
                 <FormField
                   control={form.control}
                   name="phone"
@@ -214,7 +221,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                   )}
                 />
 
-                {/* STATUS */}
+                {/* Status field */}
                 <FormField
                   control={form.control}
                   name="status"
@@ -235,7 +242,6 @@ export function ProfileContent({ user }: ProfileContentProps) {
                             <SelectItem value="active">
                               Clínica aberta (Ativo)
                             </SelectItem>
-
                             <SelectItem value="inactive">
                               Clínica fechada (Inativo)
                             </SelectItem>
@@ -246,7 +252,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                   )}
                 />
 
-                {/* TIME SELECTION MODAL */}
+                {/* Time selection dialog */}
                 <div className="space-y-2">
                   <Label className="font-semibold">Configurar Horários:</Label>
 
@@ -263,7 +269,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
 
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>Horários da clinica</DialogTitle>
+                        <DialogTitle>Horários da clínica</DialogTitle>
                         <DialogDescription>
                           Selecione abaixo os horários de funcionamento da
                           clínica
@@ -303,7 +309,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                   </Dialog>
                 </div>
 
-                {/* TIME ZONE SELECTION */}
+                {/* Time zone field */}
                 <FormField
                   control={form.control}
                   name="timeZone"
@@ -333,7 +339,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                   )}
                 />
 
-                {/* SUBMIT BUTTON */}
+                {/* Submit button */}
                 <div className="flex justify-end">
                   <Button type="submit" className="w-fit">
                     Salvar alterações
