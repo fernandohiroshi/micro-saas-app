@@ -31,34 +31,56 @@ import { convertRealToCents } from "@/utils/convertCurrency";
 
 // Actions
 import { createNewService } from "../_actions/create-service";
+import { updateService } from "../_actions/update-service";
 
-// External libs
+// External libraries
 import { toast } from "sonner";
 
 interface ServiceDialogProps {
   closeModal: () => void;
+  serviceId?: string;
+  initialValues?: {
+    name: string;
+    price: string;
+    hours: string;
+    minutes: string;
+  };
 }
 
-export default function ServiceDialog({ closeModal }: ServiceDialogProps) {
+export default function ServiceDialog({
+  closeModal,
+  serviceId,
+  initialValues,
+}: ServiceDialogProps) {
   const [loading, setLoading] = useState(false);
-  const form = useDialogServiceForm();
+  const form = useDialogServiceForm({ initialValues });
 
   // Handle form submission
   async function onSubmit(values: DialogServiceFormData) {
     setLoading(true);
 
-    // Convert price string (e.g., "100,00") to integer cents (e.g., 10000)
+    // Convert BRL string price to cents (e.g., "100,00" => 10000)
     const priceInCents = convertRealToCents(values.price);
 
-    // Calculate total service duration in minutes
+    // Calculate total duration in minutes
     const hours = parseInt(values.hours) || 0;
     const minutes = parseInt(values.minutes) || 0;
     const duration = hours * 60 + minutes;
 
+    if (serviceId) {
+      await editServiceById({
+        serviceId,
+        name: values.name,
+        priceInCents,
+        duration,
+      });
+      return;
+    }
+
     const response = await createNewService({
       name: values.name,
       price: priceInCents,
-      duration: duration,
+      duration,
     });
 
     setLoading(false);
@@ -72,13 +94,43 @@ export default function ServiceDialog({ closeModal }: ServiceDialogProps) {
     handleCloseModal();
   }
 
-  // Close the modal and reset form values
+  // Handle update service logic
+  async function editServiceById({
+    serviceId,
+    name,
+    priceInCents,
+    duration,
+  }: {
+    serviceId: string;
+    name: string;
+    priceInCents: number;
+    duration: number;
+  }) {
+    const response = await updateService({
+      serviceId,
+      name,
+      price: priceInCents,
+      duration,
+    });
+
+    setLoading(false);
+
+    if (response.error) {
+      toast.error(response.error);
+      return;
+    }
+
+    toast.success(response.data);
+    handleCloseModal();
+  }
+
+  // Reset form and close modal
   function handleCloseModal() {
     form.reset();
     closeModal();
   }
 
-  // Format currency input to BRL style (e.g., 123456 => 1.234,56)
+  // Format input value as BRL currency (e.g., 123456 => 1.234,56)
   function changeCurrency(event: React.ChangeEvent<HTMLInputElement>) {
     let { value } = event.target;
     value = value.replace(/\D/g, "");
@@ -182,7 +234,9 @@ export default function ServiceDialog({ closeModal }: ServiceDialogProps) {
             className="w-full font-semibold mt-2"
             disabled={loading}
           >
-            {loading ? "Cadastrando..." : "Adicionar serviço"}
+            {loading
+              ? "Carregando..."
+              : `${serviceId ? "Atualizar serviço" : "Cadastrar serviço"}`}
           </Button>
         </form>
       </Form>

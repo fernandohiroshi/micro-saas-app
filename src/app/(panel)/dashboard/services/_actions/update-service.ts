@@ -10,8 +10,9 @@ import { z } from "zod";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
-// Validation schema for service creation form
+// Validation schema for updating a service
 const formSchema = z.object({
+  serviceId: z.string().min(1, { message: "Service ID is required" }),
   name: z.string().min(1, { message: "Service name is required" }),
   price: z.number().min(1, { message: "Service price is required" }),
   duration: z.number(),
@@ -19,18 +20,18 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
-// Action to create a new service
-export async function createNewService(formData: FormSchema) {
+// Action to update an existing service
+export async function updateService(formData: FormSchema) {
   const session = await auth();
 
-  // Ensure user is authenticated
+  // Check if the user is authenticated
   if (!session?.user?.id) {
     return {
-      error: "Failed to create service",
+      error: "Failed to update service",
     };
   }
 
-  // Validate form data
+  // Validate input data against schema
   const schema = formSchema.safeParse(formData);
 
   if (!schema.success) {
@@ -40,27 +41,31 @@ export async function createNewService(formData: FormSchema) {
   }
 
   try {
-    // Create new service in the database
-    const newService = await prisma.service.create({
+    // Update the service with new values
+    await prisma.service.update({
+      where: {
+        id: formData.serviceId,
+        userId: session.user.id,
+      },
       data: {
         name: formData.name,
         price: formData.price,
-        duration: formData.duration,
-        userId: session.user.id,
+        // Ensure minimum duration of 30 minutes
+        duration: formData.duration < 30 ? 30 : formData.duration,
       },
     });
 
-    // Revalidate the services page to reflect changes
+    // Revalidate services page to reflect changes
     revalidatePath("/dashboard/services");
 
     return {
-      data: newService,
+      data: "Service updated successfully!",
     };
   } catch (err) {
     console.log(err);
-
-    return {
-      error: "Failed to create service",
-    };
   }
+
+  return {
+    error: "Failed to update service",
+  };
 }

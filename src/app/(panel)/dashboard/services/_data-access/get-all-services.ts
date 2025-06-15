@@ -1,8 +1,13 @@
 "use server";
 
+// Database
 import prisma from "@/lib/prisma";
 
-export async function getAllServices({ userId }: { userId: string }) {
+interface GetAllServicesProps {
+  userId: string;
+}
+
+export async function getAllServices({ userId }: GetAllServicesProps) {
   if (!userId) {
     return {
       error: "Falha ao buscar serviços",
@@ -12,7 +17,7 @@ export async function getAllServices({ userId }: { userId: string }) {
   try {
     const services = await prisma.service.findMany({
       where: {
-        userId: userId,
+        userId,
         status: true,
       },
     });
@@ -20,7 +25,7 @@ export async function getAllServices({ userId }: { userId: string }) {
     return {
       data: services,
     };
-  } catch (err) {
+  } catch (error) {
     return {
       error: "Falha ao buscar serviços",
     };
