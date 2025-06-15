@@ -60,11 +60,11 @@ export default function Professionals() {
   return (
     <section className="py-8 md:py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl text-center mb-12 font-bold">
+        <h2 className="text-xl md:text-3xl text-center mb-12 font-bold">
           Clínicas Disponíveis
         </h2>
 
-        <section className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+        <section className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {clinics.map((clinic, index) => (
             <Card
               className="p-0 hover:bg-cyan-100 ease-in-out duration-500"
@@ -94,7 +94,7 @@ export default function Professionals() {
                     <div className="w-3 h-3 rounded-full bg-cyan-500" />
                   </div>
 
-                  <Button asChild className="flex items-center">
+                  <Button asChild className="flex items-centerw-full" size="sm">
                     <Link href="#">
                       Agendar horário
                       <ArrowRight />
