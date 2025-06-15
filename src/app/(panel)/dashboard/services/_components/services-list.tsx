@@ -15,14 +15,25 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import ServiceDialog from "./service-dialog";
 import { Service } from "@/generated/prisma";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { deleteService } from "../_actions/delete-service";
+import { toast } from "sonner";
 
 interface ServiceListProps {
   services: Service[];
 }
 
 export default function ServicesList({ services }: ServiceListProps) {
-  console.log(services);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  async function handleDeleteService(serviceId: string) {
+    const response = await deleteService({ serviceId: serviceId });
+
+    if (response.error) {
+      return;
+    }
+
+    toast.success(response.data);
+  }
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -69,7 +80,11 @@ export default function ServicesList({ services }: ServiceListProps) {
                       <Pencil />
                     </Button>
 
-                    <Button variant="ghost" size="icon" onClick={() => {}}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDeleteService(service.id)}
+                    >
                       <Trash className="text-red-800" />
                     </Button>
                   </div>
