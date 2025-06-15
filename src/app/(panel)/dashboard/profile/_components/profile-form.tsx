@@ -1,3 +1,5 @@
+"use client";
+
 // Schemas
 import { z } from "zod";
 

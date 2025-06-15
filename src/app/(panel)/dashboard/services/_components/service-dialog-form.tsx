@@ -1,3 +1,5 @@
+"use client";
+
 // External libraries
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
