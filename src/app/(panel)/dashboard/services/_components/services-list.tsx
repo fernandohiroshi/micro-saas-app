@@ -4,17 +4,24 @@
 import { useState } from "react";
 
 // Icons
-import { Plus } from "lucide-react";
+import { Pencil, Plus, Trash } from "lucide-react";
 
 // UI Components
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 // Local Components
 import ServiceDialog from "./service-dialog";
+import { Service } from "@/generated/prisma";
+import { formatCurrency } from "@/utils/formatCurrency";
 
-export default function ServicesList() {
+interface ServiceListProps {
+  services: Service[];
+}
+
+export default function ServicesList({ services }: ServiceListProps) {
+  console.log(services);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
@@ -41,6 +48,35 @@ export default function ServicesList() {
               />
             </DialogContent>
           </CardHeader>
+
+          <CardContent>
+            <section className="space-y-4 mt-5">
+              {services.map((service) => (
+                <article
+                  key={service.id}
+                  className="flex justify-between items-center"
+                >
+                  <div className="flex items-center space-x-2">
+                    <span className="font-medium">{service.name}</span>
+                    <span className="text-neutral-500">-</span>
+                    <span className="font-medium text-neutral-500">
+                      {formatCurrency(service.price / 100)}
+                    </span>
+                  </div>
+
+                  <div>
+                    <Button variant="ghost" size="icon" onClick={() => {}}>
+                      <Pencil />
+                    </Button>
+
+                    <Button variant="ghost" size="icon" onClick={() => {}}>
+                      <Trash className="text-red-800" />
+                    </Button>
+                  </div>
+                </article>
+              ))}
+            </section>
+          </CardContent>
         </Card>
       </section>
     </Dialog>

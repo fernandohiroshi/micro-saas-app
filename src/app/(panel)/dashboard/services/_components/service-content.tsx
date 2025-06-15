@@ -10,7 +10,7 @@ export async function ServicesContent({ userId }: ServiceContentProps) {
 
   return (
     <div>
-      <ServicesList />
+      <ServicesList services={services.data || []} />
     </div>
   );
 }
