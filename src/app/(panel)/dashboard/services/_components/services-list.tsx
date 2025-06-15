@@ -98,7 +98,7 @@ export default function ServicesList({ services }: ServiceListProps) {
                   key={service.id}
                   className="flex justify-between items-center"
                 >
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 text-xs sm:text-sm lg:text-base">
                     <span className="font-medium">{service.name}</span>
                     <span className="text-neutral-500">-</span>
                     <span className="font-medium text-neutral-500">
