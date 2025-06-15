@@ -18,6 +18,13 @@ import { Input } from "@/components/ui/input";
 import { formatPhone } from "@/utils/formatPhone";
 import DateTimePicker from "./date-picker";
 import "react-datepicker/dist/react-datepicker.css";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type UserWithServiceAndSubscription = Prisma.UserGetPayload<{
   include: {
@@ -61,9 +68,9 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
       </section>
 
       {/* Form Schedule */}
-      <section className="max-w-2xl mx-auto mt-6 w-full">
+      <section className="max-w-2xl mx-auto mt-6 w-full ">
         <Form {...form}>
-          <form className="space-y-6 p-6 shadow-xl border rounded-md mx-2">
+          <form className="space-y-6 p-6 shadow-xl border rounded-md mx-2 bg-white">
             <FormField
               control={form.control}
               name="name"
@@ -142,7 +149,7 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
                     <FormControl>
                       <DateTimePicker
                         initialDate={new Date()}
-                        className="w-full rounded border p-2"
+                        className="w-full rounded border bg-neutral-100 p-2"
                         onChange={(date) => {
                           if (date) {
                             field.onChange(date);
@@ -150,7 +157,40 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
                         }}
                       />
                     </FormControl>
-                    <FormMessage />
+                  </FormItem>
+                </div>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="serviceId"
+              render={({ field }) => (
+                <div>
+                  <FormItem className="">
+                    <FormLabel className="font-semibold">
+                      Selecione o serviço:
+                    </FormLabel>
+                    <FormControl>
+                      <Select onValueChange={field.onChange}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Selecione um serviço" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {clinic.services.map((service) => (
+                            <SelectItem
+                              key={service.id}
+                              value={service.id}
+                              className="text-xs sm:text-sm md:text-base"
+                            >
+                              {service.name} (
+                              {Math.floor(service.duration / 60)}h{" "}
+                              {service.duration % 60}min)
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
                   </FormItem>
                 </div>
               )}
