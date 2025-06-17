@@ -120,7 +120,7 @@ export default function ServicesList({ services }: ServiceListProps) {
                       size="icon"
                       onClick={() => handleDeleteService(service.id)}
                     >
-                      <Trash className="text-red-800" />
+                      <Trash className="text-red-600" />
                     </Button>
                   </div>
                 </article>

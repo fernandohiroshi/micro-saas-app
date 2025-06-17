@@ -4,7 +4,7 @@ import { useState } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { ptBR } from "date-fns/locale/pt-BR";
 
-registerLocale("pt-Br", ptBR);
+registerLocale("pt-BR", ptBR);
 
 interface DateTimePickerProps {
   minDate?: Date;

@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 type UserWithServiceAndSubscription = Prisma.UserGetPayload<{
   include: {
@@ -39,6 +40,11 @@ interface ScheduleContentProps {
 
 export default function ScheduleContent({ clinic }: ScheduleContentProps) {
   const form = useAppointmentForm();
+  const { watch } = form;
+
+  async function handleRegisterAppointment(formData: AppointmentFormDate) {
+    console.log(formData);
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-neutral-100">
@@ -70,7 +76,10 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
       {/* Form Schedule */}
       <section className="max-w-2xl mx-auto mt-6 w-full ">
         <Form {...form}>
-          <form className="space-y-6 p-6 shadow-xl border rounded-md mx-2 bg-white">
+          <form
+            onSubmit={form.handleSubmit(handleRegisterAppointment)}
+            className="space-y-6 p-6 shadow-xl border rounded-md mx-2 bg-white"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -195,6 +204,24 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
                 </div>
               )}
             />
+            {clinic.status ? (
+              <Button
+                type="submit"
+                disabled={
+                  !watch("name") ||
+                  !watch("email") ||
+                  !watch("phone") ||
+                  !watch("date")
+                }
+                className="w-full"
+              >
+                Realizar agendamento
+              </Button>
+            ) : (
+              <p className="bg-red-600 font-medium text-white rounded-md text-center px-4 py-2">
+                A clínica esta fechada nesse momento
+              </p>
+            )}
           </form>
         </Form>
       </section>
