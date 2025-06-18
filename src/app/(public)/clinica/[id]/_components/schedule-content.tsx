@@ -98,6 +98,14 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
         }));
 
         setAvailableTimeSlots(finalSlots);
+
+        const stillAvailable = finalSlots.find(
+          (slot) => slot.time === selectedTime && slot.available
+        );
+
+        if (!stillAvailable) {
+          setSelectedTime("");
+        }
       });
     }
   }, [selectedDate, clinic.times, fetchBlockedTimes, selectedTime]);
@@ -292,7 +300,7 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
                 <div className="bg-neutral-100 p-2 rounded border">
                   {loadingSlots ? (
                     <div className="flex justify-center">
-                      <PuffLoader size={50} color="darkcyan" />
+                      <PuffLoader size={30} color="darkcyan" />
                     </div>
                   ) : availableTimeSlots.length === 0 ? (
                     <p>Nenhum horário disponivel</p>

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sheet";
 import { Handshake, LogIn, Mail, Menu } from "lucide-react";
 import { handleRegister } from "../_actions/login";
+import { PuffLoader } from "react-spinners";
 
 export function Header() {
   const { data: session, status } = useSession();
@@ -48,7 +49,7 @@ export function Header() {
       ))}
 
       {status === "loading" ? (
-        <></>
+        <PuffLoader size={30} color="darkcyan" />
       ) : session ? (
         <Button variant="outline" asChild className="font-semibold">
           <Link href="/dashboard">Dashboard</Link>

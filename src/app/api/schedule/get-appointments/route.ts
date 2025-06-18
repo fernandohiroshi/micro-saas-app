@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
 
       if (startIndex !== -1) {
         for (let i = 0; i < requiredSlots; i++) {
-          const blokedSlot = user.times[startIndex + 1];
+          const blokedSlot = user.times[startIndex + i];
           if (blokedSlot) {
             blokedSlots.add(blokedSlot);
           }
@@ -70,8 +70,6 @@ export async function GET(request: NextRequest) {
     }
 
     const blokedtimes = Array.from(blokedSlots);
-
-    console.log("BLOKEDTIMES: ", blokedtimes);
 
     return NextResponse.json(blokedtimes);
   } catch (err) {

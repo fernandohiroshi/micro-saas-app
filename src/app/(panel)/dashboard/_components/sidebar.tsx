@@ -177,10 +177,10 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
         </div>
 
         <Button
-          variant="destructive"
           onClick={handleLogout}
           title="Sair da conta"
           className="w-full"
+          size="sm"
         >
           {isCollapsed ? <LogOut /> : "Sair da conta"}
         </Button>
