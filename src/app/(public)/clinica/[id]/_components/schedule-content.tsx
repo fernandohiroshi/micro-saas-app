@@ -27,6 +27,9 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useCallback, useEffect, useState } from "react";
+import { Label } from "@/components/ui/label";
+import ScheduleTimeList from "./schedule-time-list";
+import { PuffLoader } from "react-spinners";
 
 type UserWithServiceAndSubscription = Prisma.UserGetPayload<{
   include: {
@@ -39,7 +42,7 @@ interface ScheduleContentProps {
   clinic: UserWithServiceAndSubscription;
 }
 
-interface TimeSlot {
+export interface TimeSlot {
   time: string;
   available: boolean;
 }
@@ -65,10 +68,13 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
         const dateString = date.toISOString().split("T")[0];
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_URL}/api/schendule/get-appointments?userId=${clinic.id}&date=${dateString}`
+          `${process.env.NEXT_PUBLIC_URL}/api/schedule/get-appointments?userId=${clinic.id}&date=${dateString}`
         );
 
-        return [];
+        const json = await response.json();
+        setLoadingSlots(false);
+
+        return json;
       } catch (err) {
         console.log(err);
         setLoadingSlots(false);
@@ -81,7 +87,15 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
   useEffect(() => {
     if (selectedDate) {
       fetchBlockedTimes(selectedDate).then((bloked) => {
-        console.log("HORARIOS RESERVADOS:", bloked);
+        setBlokedTimes(bloked);
+        const times = clinic.times || [];
+
+        const finalSlots = times.map((time) => ({
+          time: time,
+          available: !bloked.includes(time),
+        }));
+
+        setAvailableTimeSlots(finalSlots);
       });
     }
   }, [selectedDate, clinic.times, fetchBlockedTimes, selectedTime]);
@@ -248,6 +262,42 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
                 </div>
               )}
             />
+
+            {selecteServiceId && (
+              <div className="space-y-2">
+                <Label className="font-semibold">Horários disponíveis:</Label>
+                <div className="bg-neutral-100 p-2 rounded border">
+                  {loadingSlots ? (
+                    <div className="flex justify-center">
+                      <PuffLoader size={50} color="darkcyan" />
+                    </div>
+                  ) : availableTimeSlots.length === 0 ? (
+                    <p>Nenhum horário disponivel</p>
+                  ) : (
+                    <ScheduleTimeList
+                      onSelectTime={(time) => setSelectedTime(time)}
+                      clinicTimes={clinic.times}
+                      blokedTimes={blokedTimes}
+                      availableTimeSlots={availableTimeSlots}
+                      selectedTime={selectedTime}
+                      selectedDate={selectedDate}
+                      requiredSlots={
+                        clinic.services.find(
+                          (service) => service.id === selecteServiceId
+                        )
+                          ? Math.ceil(
+                              clinic.services.find(
+                                (service) => service.id === selecteServiceId
+                              )!.duration / 30
+                            )
+                          : 1
+                      }
+                    />
+                  )}
+                </div>
+              </div>
+            )}
+
             {clinic.status ? (
               <Button
                 type="submit"

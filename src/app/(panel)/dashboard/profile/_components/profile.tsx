@@ -275,7 +275,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                           Clique nos horários para marcar ou desmarcar:
                         </p>
 
-                        <div className="grid grid-cols-5 gap-2">
+                        <div className="grid grid-cols-4 md:grid-cols-5 gap-2">
                           {hours.map((hour) => (
                             <Button
                               key={hour}

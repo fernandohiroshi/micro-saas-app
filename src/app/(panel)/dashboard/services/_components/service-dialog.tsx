@@ -35,6 +35,7 @@ import { updateService } from "../_actions/update-service";
 
 // External libraries
 import { toast } from "sonner";
+import { PuffLoader } from "react-spinners";
 
 interface ServiceDialogProps {
   closeModal: () => void;
@@ -234,9 +235,11 @@ export default function ServiceDialog({
             className="w-full font-semibold mt-2"
             disabled={loading}
           >
-            {loading
-              ? "Carregando..."
-              : `${serviceId ? "Atualizar serviço" : "Cadastrar serviço"}`}
+            {loading ? (
+              <PuffLoader size={50} color="darkcyan" />
+            ) : (
+              `${serviceId ? "Atualizar serviço" : "Cadastrar serviço"}`
+            )}
           </Button>
         </form>
       </Form>

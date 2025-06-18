@@ -23,12 +23,57 @@ export async function GET(request: NextRequest) {
     const startDate = new Date(year, month - 1, day, 0, 0, 0);
     const endDate = new Date(year, month - 1, day, 23, 59, 59, 999);
 
-    console.log("Start date: ", startDate);
-    console.log("End date: ", endDate);
-
-    return NextResponse.json({
-      ok: true,
+    const user = await prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
     });
+
+    if (!user) {
+      return NextResponse.json(
+        {
+          error: "Nenhum agendamento encontrado",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const appointments = await prisma.appointment.findMany({
+      where: {
+        userId: userId,
+        appointmentDate: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      include: {
+        service: true,
+      },
+    });
+
+    const blokedSlots = new Set<string>();
+
+    for (const apt of appointments) {
+      const requiredSlots = Math.ceil(apt.service.duration / 30);
+      const startIndex = user.times.indexOf(apt.time);
+
+      if (startIndex !== -1) {
+        for (let i = 0; i < requiredSlots; i++) {
+          const blokedSlot = user.times[startIndex + 1];
+          if (blokedSlot) {
+            blokedSlots.add(blokedSlot);
+          }
+        }
+      }
+    }
+
+    const blokedtimes = Array.from(blokedSlots);
+
+    console.log("BLOKEDTIMES: ", blokedtimes);
+
+    return NextResponse.json(blokedtimes);
   } catch (err) {
     console.log(err);
 
