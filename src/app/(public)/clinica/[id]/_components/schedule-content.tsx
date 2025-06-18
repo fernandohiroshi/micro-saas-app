@@ -30,6 +30,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import ScheduleTimeList from "./schedule-time-list";
 import { PuffLoader } from "react-spinners";
+import { createNewAppointment } from "../_actions/create-appointment";
+import { toast } from "sonner";
 
 type UserWithServiceAndSubscription = Prisma.UserGetPayload<{
   include: {
@@ -101,7 +103,28 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
   }, [selectedDate, clinic.times, fetchBlockedTimes, selectedTime]);
 
   async function handleRegisterAppointment(formData: AppointmentFormDate) {
-    console.log(formData);
+    if (!selectedTime) {
+      return;
+    }
+
+    const response = await createNewAppointment({
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      time: selectedTime,
+      date: formData.date,
+      serviceId: formData.serviceId,
+      clinicId: clinic.id,
+    });
+
+    if (response.error) {
+      toast.error(response.error);
+      return;
+    }
+
+    toast.success("Consulta agendada com sucesso!");
+    form.reset();
+    setSelectedTime("");
   }
 
   return (
