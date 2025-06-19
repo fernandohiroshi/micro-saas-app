@@ -118,9 +118,10 @@ export default function ServicesList({ services }: ServiceListProps) {
                     <Button
                       variant="ghost"
                       size="icon"
+                      className="hover:bg-red-100"
                       onClick={() => handleDeleteService(service.id)}
                     >
-                      <Trash className="text-red-600" />
+                      <Trash className="text-red-700" />
                     </Button>
                   </div>
                 </article>
