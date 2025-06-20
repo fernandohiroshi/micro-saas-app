@@ -266,7 +266,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 
               {/* Logout button */}
               <SheetFooter>
-                <Button variant="destructive" onClick={handleLogout}>
+                <Button size="sm" onClick={handleLogout}>
                   Sair da conta
                 </Button>
               </SheetFooter>
