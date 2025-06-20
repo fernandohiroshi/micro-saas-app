@@ -1,7 +1,6 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { error } from "console";
 import { revalidatePath } from "next/cache";
 import { date, z } from "zod";
 
