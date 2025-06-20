@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { date, z } from "zod";
+import { z } from "zod";
 
 const formSchema = z.object({
   reminderId: z

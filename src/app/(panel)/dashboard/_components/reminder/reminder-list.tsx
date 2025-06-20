@@ -10,7 +10,6 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -18,6 +17,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ReminderContent } from "./reminder-content";
+import { useState } from "react";
 
 interface ReminderListProps {
   reminder: Reminder[];
@@ -25,6 +25,7 @@ interface ReminderListProps {
 
 export function ReminderList({ reminder }: ReminderListProps) {
   const router = useRouter();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   async function handleDeleteReminder(id: string) {
     const response = await deleteReminder({ reminderId: id });
@@ -46,7 +47,7 @@ export function ReminderList({ reminder }: ReminderListProps) {
             Lembretes
           </CardTitle>
 
-          <Dialog>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline">
                 <Plus />
@@ -61,7 +62,7 @@ export function ReminderList({ reminder }: ReminderListProps) {
                 </DialogDescription>
               </DialogHeader>
 
-              <ReminderContent />
+              <ReminderContent closeDialog={() => setIsDialogOpen(false)} />
             </DialogContent>
           </Dialog>
         </CardHeader>
