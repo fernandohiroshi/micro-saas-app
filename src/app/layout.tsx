@@ -3,6 +3,7 @@ import { SessionAuthProvider } from "@/components/session-auth";
 import { Montserrat } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+import { QueryClientContext } from "@/providers/queryclient";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -21,8 +22,10 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className={`${montserrat.className} antialiased`}>
         <SessionAuthProvider>
-          <Toaster />
-          {children}
+          <QueryClientContext>
+            <Toaster duration={2500} />
+            {children}
+          </QueryClientContext>
         </SessionAuthProvider>
       </body>
     </html>

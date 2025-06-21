@@ -27,7 +27,7 @@ export default async function Dashboard() {
         <ButtonCopyLink userId={session.user?.id} />
       </section>
 
-      <section className="grid grid-cols-1 lg:grid-cols-2 mt-4">
+      <section className="grid grid-cols-1 lg:grid-cols-2 mt-4 gap-4">
         <Appointments userId={session.user?.id!} />
         <Reminders userId={session.user?.id!} />
       </section>
