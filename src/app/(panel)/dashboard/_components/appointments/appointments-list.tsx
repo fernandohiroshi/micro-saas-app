@@ -43,6 +43,8 @@ export function AppointmentsList({ times }: AppointmestListProps) {
 
       return json;
     },
+    staleTime: 20000,
+    refetchInterval: 60000,
   });
 
   const occupantMap: Record<string, AppointmentsWithService> = {};
