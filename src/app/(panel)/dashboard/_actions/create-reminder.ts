@@ -6,11 +6,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 const formSchema = z.object({
-  description: z
-    .string({
-      errorMap: () => ({ message: "A descrição do lembrete é obrigatório" }),
-    })
-    .min(1, "O ID do lembrete é obrigatório"),
+  description: z.string().min(1, "A descrição do lembrete é obrigatória"),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
