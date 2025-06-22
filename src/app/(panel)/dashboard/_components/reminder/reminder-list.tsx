@@ -76,7 +76,7 @@ export function ReminderList({ reminder }: ReminderListProps) {
             {reminder.map((item, index) => (
               <article
                 key={item.id}
-                className="flex flex-wrap flex-row items-center justify-between py-2 mb-2 px-2 rounded-md bg-neutral-100"
+                className="flex flex-wrap flex-row items-center justify-between py-2 mb-2 px-2 rounded-md bg-neutral-50"
               >
                 <p className="text-sm lg:text-base">{item.description}</p>
                 <Button

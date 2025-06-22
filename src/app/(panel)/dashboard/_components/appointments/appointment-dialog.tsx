@@ -5,14 +5,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { AppointmentsWithService } from "./appointments-list";
+import { format } from "date-fns";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 interface AppointmentDialogProps {
   appointments: AppointmentsWithService | null;
 }
 
 export function AppointmentDialog({ appointments }: AppointmentDialogProps) {
-  console.log("DETALHES DO AGENDAMENTO: ", appointments);
-
   return (
     <DialogContent>
       <DialogHeader>
@@ -33,6 +33,33 @@ export function AppointmentDialog({ appointments }: AppointmentDialogProps) {
               <span className="font-semibold">Telefone:</span>{" "}
               {appointments.phone}
             </p>
+
+            <p>
+              <span className="font-semibold">E-mail:</span>{" "}
+              {appointments.email}
+            </p>
+            <br />
+            <p>
+              <span className="font-semibold">Horário agendado:</span>{" "}
+              {appointments.time}
+            </p>
+
+            <p>
+              <span className="font-semibold">Data do agendamento:</span>{" "}
+              {format(appointments.appointmentDate, "dd/MM/yyyy")}
+            </p>
+
+            <div className="bg-neutral-100 mt-4 rounded p-2">
+              <p>
+                <span className="font-semibold">Serviço:</span>{" "}
+                {appointments.service.name}
+              </p>
+
+              <p>
+                <span className="font-semibold">Valor:</span>{" "}
+                {formatCurrency(appointments.service.price / 100)}
+              </p>
+            </div>
           </article>
         )}
       </div>

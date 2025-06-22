@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { AppointmentDialog } from "./appointment-dialog";
+import { ButtonPickerAppointment } from "./button-date";
 
 export type AppointmentsWithService = Prisma.AppointmentGetPayload<{
   include: {
@@ -98,7 +99,7 @@ export function AppointmentsList({ times }: AppointmestListProps) {
             Agendamentos
           </CardTitle>
 
-          <button>SELECIONAR DATA</button>
+          <ButtonPickerAppointment />
         </CardHeader>
 
         <CardContent>
@@ -113,16 +114,16 @@ export function AppointmentsList({ times }: AppointmestListProps) {
                   return (
                     <div
                       key={slot}
-                      className="flex items-center py-2 border-t last:border-b"
+                      className="flex items-center py-2 border-t last:border-b bg-neutral-50 p-2"
                     >
                       <div className="w-16 text-sm font-semibold">{slot}</div>
 
-                      <div className="flex-1 text-sm text-neutral-700">
+                      <div className="flex-1 text-sm text-neutral-700 ">
                         <div className="font-semibold">{occupant.name}</div>
                         <div className="text-neutral-700">{occupant.phone}</div>
                       </div>
 
-                      <div className="ml-auto">
+                      <div className="ml-auto ">
                         <div className="flex gap-2">
                           <DialogTrigger asChild>
                             <Button
@@ -152,7 +153,7 @@ export function AppointmentsList({ times }: AppointmestListProps) {
                 return (
                   <div
                     key={slot}
-                    className="flex items-center py-2 border-t last:border-b"
+                    className="flex items-center py-2 border-t last:border-b p-2"
                   >
                     <div className="w-16 text-sm font-semibold">{slot}</div>
 
