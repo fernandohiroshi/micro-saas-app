@@ -6,6 +6,8 @@ import getSession from "@/lib/getSession";
 
 // Components
 import { ServicesContent } from "./_components/service-content";
+import { Suspense } from "react";
+import { PuffLoader } from "react-spinners";
 
 export default async function Services() {
   // Get current user session
@@ -18,8 +20,15 @@ export default async function Services() {
 
   return (
     <section>
-      {/* Render services for authenticated user */}
-      <ServicesContent userId={session.user?.id} />
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center h-screen">
+            <PuffLoader size="200px" color="darkcyan" />
+          </div>
+        }
+      >
+        <ServicesContent userId={session.user?.id} />
+      </Suspense>
     </section>
   );
 }

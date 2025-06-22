@@ -14,6 +14,7 @@ import { useState } from "react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { AppointmentDialog } from "./appointment-dialog";
 import { ButtonPickerAppointment } from "./button-date";
+import { PuffLoader } from "react-spinners";
 
 export type AppointmentsWithService = Prisma.AppointmentGetPayload<{
   include: {
@@ -105,7 +106,9 @@ export function AppointmentsList({ times }: AppointmestListProps) {
         <CardContent>
           <ScrollArea className="h-[calc(100vh-20rem)] lg:h-[calc(100vh-15rem)] pr-4">
             {isLoading ? (
-              <p>Carregando agenda...</p>
+              <div className="flex justify-center items-start mt-8">
+                <PuffLoader size="100px" color="darkcyan" />
+              </div>
             ) : (
               times.map((slot) => {
                 const occupant = occupantMap[slot];
