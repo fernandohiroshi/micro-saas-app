@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 export const GET = auth(async function GET(request) {
   if (!request.auth) {
@@ -28,9 +28,9 @@ export const GET = auth(async function GET(request) {
   try {
     const [year, month, day] = dateString.split("-").map(Number);
 
-    const startDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+    const startDate = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
 
-    const endDate = new Date(year, month - 1, day, 23, 59, 59, 999);
+    const endDate = new Date(Date.UTC(year, month - 1, day, 23, 59, 59, 999));
 
     const appointments = await prisma.appointment.findMany({
       where: {

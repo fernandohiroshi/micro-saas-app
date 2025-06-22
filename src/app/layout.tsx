@@ -10,7 +10,7 @@ const montserrat = Montserrat({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "PlanC",
   description: "Desenvolvido por Fernando Hiroshi - Konbini Code.",
-  icons: "/logo.png",
+  icons: "favicon.ico",
 };
 
 export default function RootLayout({
