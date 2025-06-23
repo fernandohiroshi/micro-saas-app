@@ -9,7 +9,7 @@ export type PlansProps = {
 
 export const PLANS = {
   BASIC: {
-    maxServices: 3,
+    maxServices: 5,
   },
   PROFESSIONAL: {
     maxServices: 50,
@@ -38,8 +38,7 @@ export const subscriptionPlans = [
     features: [
       `Até ${PLANS["PROFESSIONAL"].maxServices} serviços`,
       "Agendamento ilimitado",
-      "Suporte",
-      "Lembretes",
+      "Lembretes & suporte online",
     ],
   },
 ];
