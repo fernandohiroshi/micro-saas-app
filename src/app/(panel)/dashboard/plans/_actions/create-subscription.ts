@@ -20,9 +20,71 @@ export async function createSubscription({ type }: SubscriptionProps) {
     };
   }
 
-  console.log("(SERVER): Ativar Plano", type);
+  const findUser = await prisma.user.findFirst({
+    where: {
+      id: userId,
+    },
+  });
 
-  return {
-    sessionId: "123",
-  };
+  if (!findUser) {
+    return {
+      sessionId: "",
+      error: "Falha ao ativar plano",
+    };
+  }
+
+  let customerId = findUser.stripe_customer_id;
+
+  if (!customerId) {
+    const striperCustomer = await stripe.customers.create({
+      email: findUser.email,
+    });
+
+    await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        stripe_customer_id: striperCustomer.id,
+      },
+    });
+
+    customerId = striperCustomer.id;
+  }
+
+  try {
+    const stripeCheckoutSession = await stripe.checkout.sessions.create({
+      customer: customerId,
+      payment_method_types: ["card"],
+      billing_address_collection: "required",
+      line_items: [
+        {
+          price:
+            type === "BASIC"
+              ? process.env.STRIPE_PLAN_BASIC
+              : process.env.STRIPE_PLAN_PRO,
+          quantity: 1,
+        },
+      ],
+      metadata: {
+        type: type,
+      },
+      mode: "subscription",
+      allow_promotion_codes: true,
+      success_url: process.env.STRIPE_SUCCESS_URL,
+      cancel_url: process.env.STRIPE_CANCEL_URL,
+    });
+
+    return {
+      sessionId: stripeCheckoutSession.id,
+    };
+  } catch (err) {
+    console.log(err);
+    console.log("ERRO AO CRIAR CHECKOUT");
+
+    return {
+      sessionId: "",
+      error: "Falha ao ativar plano",
+    };
+  }
 }

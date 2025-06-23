@@ -3,6 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Plan } from "@/generated/prisma";
 import { createSubscription } from "../_actions/create-subscription";
+import { toast } from "sonner";
+import { getStripeJs } from "@/utils/stripe-js";
 
 interface SubscriptionButtonProps {
   type: Plan;
@@ -10,7 +12,18 @@ interface SubscriptionButtonProps {
 
 export function SubscriptionButton({ type }: SubscriptionButtonProps) {
   async function handleCreateBilling() {
-    const response = await createSubscription({ type: type });
+    const { sessionId, error } = await createSubscription({ type: type });
+
+    if (error) {
+      toast.error(error);
+      return;
+    }
+
+    const stripe = await getStripeJs();
+
+    if (stripe) {
+      await stripe.redirectToCheckout({ sessionId: sessionId });
+    }
   }
 
   return (
