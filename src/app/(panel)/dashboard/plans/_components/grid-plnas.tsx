@@ -8,19 +8,19 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { subscriptionPlans } from "@/utils/plans/index";
+import { SubscriptionButton } from "./subscription-button";
+import { Star } from "lucide-react";
 
 export function GridPlans() {
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-5">
       {subscriptionPlans.map((plan, index) => (
-        <Card
-          key={plan.id}
-          className={`flex flex-col w-full mx-auto ${
-            index === 1 && "bg-cyan-100"
-          }`}
-        >
+        <Card key={plan.id} className="flex flex-col w-full mx-auto ">
           <CardHeader>
-            <CardTitle className="text-xl md:text-2xl uppercase">
+            <CardTitle className="text-xl md:text-2xl uppercase flex items-center gap-1">
+              {plan.id === "PROFESSIONAL" && (
+                <Star className="text-white rounded-full p-1 bg-yellow-500 animate-pulse" />
+              )}{" "}
               {plan.name}
             </CardTitle>
             <CardDescription>{plan.description}</CardDescription>
@@ -41,7 +41,9 @@ export function GridPlans() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button className="w-full bg-black">Ativar assinatura</Button>
+            <SubscriptionButton
+              type={plan.id === "BASIC" ? "BASIC" : "PROFESSIONAL"}
+            />
           </CardFooter>
         </Card>
       ))}
