@@ -17,7 +17,7 @@ export function GridPlans() {
       {subscriptionPlans.map((plan, index) => (
         <Card key={plan.id} className="flex flex-col w-full mx-auto ">
           <CardHeader>
-            <CardTitle className="text-xl md:text-2xl uppercase flex items-center gap-1">
+            <CardTitle className="text-xl md:text-2xl uppercase flex items-center gap-2">
               {plan.id === "PROFESSIONAL" && (
                 <Star className="text-white rounded-full p-1 bg-yellow-500 animate-pulse" />
               )}{" "}
