@@ -4,7 +4,7 @@ import { Plan } from "@/generated/prisma";
 import { PlansProps } from "../plans/index";
 
 export interface PlanDetailInfo {
-  masServices: number;
+  maxServices: number;
 }
 
 const PLANS_LIMITS: PlansProps = {
