@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -27,7 +26,7 @@ export function GridPlans() {
           </CardHeader>
 
           <CardContent>
-            <ul>
+            <ul className="list-disc list-inside">
               {plan.features.map((feature, index) => (
                 <li key={index} className="text-sm md:text-base">
                   {feature}
