@@ -23,14 +23,23 @@ import { deleteService } from "../_actions/delete-service";
 
 // External libraries
 import { toast } from "sonner";
+import { ResultPermissionProps } from "@/utils/permissions/canPermission";
+import Link from "next/link";
 
 interface ServiceListProps {
   services: Service[];
+  permission: ResultPermissionProps;
 }
 
-export default function ServicesList({ services }: ServiceListProps) {
+export default function ServicesList({
+  services,
+  permission,
+}: ServiceListProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingService, setEditingService] = useState<null | Service>(null);
+  const servicesList = permission.hasPermission
+    ? services
+    : services.slice(0, 3);
 
   async function handleDeleteService(serviceId: string) {
     const response = await deleteService({ serviceId });
@@ -63,11 +72,22 @@ export default function ServicesList({ services }: ServiceListProps) {
               Serviços
             </CardTitle>
 
-            <DialogTrigger asChild>
-              <Button>
-                <Plus />
-              </Button>
-            </DialogTrigger>
+            {permission.hasPermission && (
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus />
+                </Button>
+              </DialogTrigger>
+            )}
+
+            {!permission.hasPermission && (
+              <Link
+                href="/dashboard/plans"
+                className="text-red-600 animate-pulse"
+              >
+                Limite de serviços atingido
+              </Link>
+            )}
 
             <DialogContent
               onInteractOutside={(e) => {
@@ -102,7 +122,7 @@ export default function ServicesList({ services }: ServiceListProps) {
 
           <CardContent>
             <section className="space-y-4 mt-5">
-              {services.map((service) => (
+              {servicesList.map((service) => (
                 <article
                   key={service.id}
                   className="flex justify-between items-center"

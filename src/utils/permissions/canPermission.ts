@@ -7,6 +7,8 @@ import { canCreateService } from "./canCreateService";
 
 export type PLAN_PROP = "BASIC" | "PROFESSIONAL" | "TRIAL" | "EXPIRED";
 
+type TypeCheck = "service";
+
 export interface ResultPermissionProps {
   hasPermission: boolean;
   planId: PLAN_PROP;
@@ -15,7 +17,7 @@ export interface ResultPermissionProps {
 }
 
 interface CanPermissionProps {
-  type: string;
+  type: TypeCheck;
 }
 
 export async function canPermission({
