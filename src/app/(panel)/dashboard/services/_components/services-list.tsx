@@ -68,7 +68,7 @@ export default function ServicesList({
       <section className="mx-auto">
         <Card>
           <CardHeader className="flex flex-row justify-between items-center space-y-0 pb-2">
-            <CardTitle className="text-xl md:text-2xl font-bold">
+            <CardTitle className="font-bold text-xl md:text-2xl">
               Serviços
             </CardTitle>
 

@@ -142,13 +142,13 @@ export function ProfileContent({ user }: ProfileContentProps) {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card>
             <CardHeader>
-              <CardTitle className="text-xl md:text-2xl font-bold">
+              <CardTitle className="font-bold text-xl md:text-2xl">
                 Meus dados
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex justify-center">
-                <div className="relative h-40 w-40 rounded-full overflow-hidden shadow">
+                <div className="relative shadow rounded-full w-40 h-40 overflow-hidden">
                   <Image
                     src={user.image ? user.image : userImage}
                     alt="Profile Image"
@@ -254,7 +254,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                     <DialogTrigger asChild>
                       <Button
                         variant="outline"
-                        className="w-full justify-between font-normal"
+                        className="justify-between w-full font-normal"
                       >
                         Clique aqui para selecionar horários
                         <ArrowRight />
@@ -275,7 +275,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                           Clique nos horários para marcar ou desmarcar:
                         </p>
 
-                        <div className="grid grid-cols-4 md:grid-cols-5 gap-2">
+                        <div className="gap-2 grid grid-cols-4 md:grid-cols-5">
                           {hours.map((hour) => (
                             <Button
                               key={hour}

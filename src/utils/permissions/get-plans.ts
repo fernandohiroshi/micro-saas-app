@@ -9,7 +9,7 @@ export interface PlanDetailInfo {
 
 const PLANS_LIMITS: PlansProps = {
   BASIC: {
-    maxServices: 3,
+    maxServices: 5,
   },
   PROFESSIONAL: {
     maxServices: 50,
