@@ -52,6 +52,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Avatar } from "./profile-avatar";
 
 type UserWithSubscription = Prisma.UserGetPayload<{
   include: {
@@ -148,14 +149,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex justify-center">
-                <div className="relative shadow rounded-full w-40 h-40 overflow-hidden">
-                  <Image
-                    src={user.image ? user.image : userImage}
-                    alt="Profile Image"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
+                <Avatar avatarUrl={user.image} userId={user.id} />
               </div>
 
               <div className="space-y-4">

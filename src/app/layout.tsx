@@ -25,7 +25,7 @@ export default function RootLayout({
       <body className={`${montserrat.className} antialiased`}>
         <SessionAuthProvider>
           <QueryClientContext>
-            <Toaster duration={2500} />
+            <Toaster duration={4000} richColors position="top-right" />
             {children}
           </QueryClientContext>
         </SessionAuthProvider>
