@@ -20,12 +20,8 @@ export function Avatar({ avatarUrl, userId }: AvatarProps) {
       setLoading(true);
       const image = e.target.files[0];
 
-      if (
-        image.type !== "image/jpeg" &&
-        image.type !== "image/png" &&
-        image.type !== "image/jpg"
-      ) {
-        toast.error("Formato inválido! Use JPG ou PNG.)");
+      if (image.type !== "image/jpeg" && image.type !== "image/png") {
+        toast.error("Formato inválido! Use JPEG ou PNG.)");
         return;
       }
 
@@ -33,6 +29,11 @@ export function Avatar({ avatarUrl, userId }: AvatarProps) {
       const newFile = new File([image], newFileName, { type: image.type });
 
       const urlImage = await uploadImage(newFile);
+
+      if (urlImage) {
+        setPreviewImage(urlImage);
+      }
+      setLoading(false);
     }
   }
 
@@ -58,7 +59,7 @@ export function Avatar({ avatarUrl, userId }: AvatarProps) {
       }
 
       toast.success("Imagem alterada com sucesso!");
-      return data as string;
+      return data.secure_url as string;
     } catch (err) {
       console.log(err);
       return null;
