@@ -80,7 +80,6 @@ export async function createSubscription({ type }: SubscriptionProps) {
     };
   } catch (err) {
     console.log(err);
-    console.log("ERRO AO CRIAR CHECKOUT");
 
     return {
       sessionId: "",

@@ -9,6 +9,7 @@ import { Appointments } from "./_components/appointments/appointments";
 import { checkSubscription } from "@/utils/permissions/checkSubscription";
 import { LabelSubscription } from "@/components/ui/label-subscription";
 
+
 export default async function Dashboard() {
   const session = await getSession();
 

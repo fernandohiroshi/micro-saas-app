@@ -12,8 +12,6 @@ export const POST = async (request: Request) => {
     return NextResponse.error();
   }
 
-  console.log("WEBHOOK INICIANDO...");
-
   const text = await request.text();
 
   const event = stripe.webhooks.constructEvent(
@@ -66,7 +64,8 @@ export const POST = async (request: Request) => {
       break;
 
     default:
-      console.log("Evento não tratado: ", event.type);
+      console.log(`Evento Stripe não tratado: ${event.type}`);
+      break;
   }
 
   return NextResponse.json({ received: true });

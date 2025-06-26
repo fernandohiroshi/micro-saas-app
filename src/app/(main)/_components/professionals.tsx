@@ -51,7 +51,12 @@ export default function Professionals({ professionals }: ProfessionalsProps) {
                 <div className="p-4 space-y-4 min-h-[140px] flex flex-col justify-between">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-semibold">{clinic.name}</h3>
+                      <h3
+                        className="font-semibold line-clamp-1"
+                        title={clinic.name!}
+                      >
+                        {clinic.name}
+                      </h3>
                       <p className="text-sm text-neutral-700 line-clamp-2">
                         {clinic.address ?? "Endereço não informado."}
                       </p>
