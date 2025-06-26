@@ -1,14 +1,21 @@
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Divide } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import img from "../../../../public/user.png";
-import { User } from "@/generated/prisma";
+import { Prisma } from "@/generated/prisma";
+import { PremiumCardBadge } from "./premium-badge";
+
+type UserWithSubscription = Prisma.UserGetPayload<{
+  include: {
+    subscription: true;
+  };
+}>;
 
 interface ProfessionalsProps {
-  professionals: User[];
+  professionals: UserWithSubscription[];
 }
 
 export default function Professionals({ professionals }: ProfessionalsProps) {
@@ -34,19 +41,21 @@ export default function Professionals({ professionals }: ProfessionalsProps) {
                       fill
                       className="object-cover"
                     />
+
+                    {clinic?.subscription?.plan === "PROFESSIONAL" && (
+                      <PremiumCardBadge />
+                    )}
                   </div>
                 </div>
 
-                <div className="p-4 space-y-4">
+                <div className="p-4 space-y-4 min-h-[140px] flex flex-col justify-between">
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="font-semibold">{clinic.name}</h3>
-                      <p className="text-sm text-neutral-700">
+                      <p className="text-sm text-neutral-700 line-clamp-2">
                         {clinic.address ?? "Endereço não informado."}
                       </p>
                     </div>
-
-                    <div className="w-3 h-3 rounded-full bg-cyan-500" />
                   </div>
 
                   <Button asChild className="flex items-centerw-full" size="sm">

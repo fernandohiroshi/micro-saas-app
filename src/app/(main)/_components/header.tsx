@@ -11,17 +11,25 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Handshake, LogIn, Mail, Menu } from "lucide-react";
+import {
+  BiLogoInstagram,
+  BiLogoFacebookCircle,
+  BiLogoTwitter,
+  BiLogoGmail,
+} from "react-icons/bi";
 import { handleRegister } from "../_actions/login";
 import { PuffLoader } from "react-spinners";
+import { LogIn, Menu } from "lucide-react";
 
 export function Header() {
   const { data: session, status } = useSession();
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { href: "#profissionais", label: "Profissionais", icon: Handshake },
-    { href: "/contato", label: "Contatos", icon: Mail },
+    { href: "/", label: "Instagram", icon: BiLogoInstagram },
+    { href: "/", label: "Twitter", icon: BiLogoTwitter },
+    { href: "/", label: "Gmail", icon: BiLogoGmail },
+    { href: "/", label: "Facebook", icon: BiLogoFacebookCircle },
   ];
 
   async function handleLogin() {
@@ -33,17 +41,17 @@ export function Header() {
       {navItems.map((item) => (
         <Button
           onClick={() => setIsOpen(false)}
-          key={item.href}
+          key={item.label}
           asChild
-          variant="ghost"
+          variant="outline"
           className="flex items-center justify-start text-sm md:text-base"
         >
           <Link
             href={item.href}
-            className="flex items-center hover:text-cyan-600 duration-200 ease-in-out font-semibold"
+            className="flex items-center hover:text-cyan-500 duration-200 ease-in-out font-semibold"
           >
             <item.icon />
-            {item.label}
+            <span className="md:hidden">{item.label}</span>
           </Link>
         </Button>
       ))}
@@ -71,7 +79,7 @@ export function Header() {
         </Link>
 
         {/* DESKTOP */}
-        <nav className="hidden md:flex items-center space-x-4">
+        <nav className="hidden md:flex items-center gap-2">
           <NavLinks />
         </nav>
 

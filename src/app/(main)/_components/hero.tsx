@@ -18,7 +18,7 @@ export function Hero() {
               agilizar seu atendimento de forma simplificada e organizada.
             </p>
 
-            <Button className="w-fit text-lg md:text-xl">
+            <Button className="w-fit text-sm md:text-lg py-6">
               Encontre uma clínica
             </Button>
           </article>
