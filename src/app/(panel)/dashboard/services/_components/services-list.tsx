@@ -1,74 +1,65 @@
-"use client";
+"use client"
 
-// React
-import { useState } from "react";
+import { useState } from "react"
+import Link from "next/link"
 
-// Icons
-import { Pencil, Plus, Trash } from "lucide-react";
+import { Pencil, Plus, Trash } from "lucide-react"
+import { toast } from "sonner"
 
-// UI Components
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { Service } from "@/generated/prisma"
+import { formatCurrency } from "@/utils/formatCurrency"
+import { ResultPermissionProps } from "@/utils/permissions/canPermission"
 
-// Local Components
-import ServiceDialog from "./service-dialog";
+import { deleteService } from "../_actions/delete-service"
 
-// Types & Utils
-import { Service } from "@/generated/prisma";
-import { formatCurrency } from "@/utils/formatCurrency";
-
-// Actions
-import { deleteService } from "../_actions/delete-service";
-
-// External libraries
-import { toast } from "sonner";
-import { ResultPermissionProps } from "@/utils/permissions/canPermission";
-import Link from "next/link";
+import ServiceDialog from "./service-dialog"
 
 interface ServiceListProps {
-  services: Service[];
-  permission: ResultPermissionProps;
+  services: Service[]
+  permission: ResultPermissionProps
 }
 
 export default function ServicesList({
   services,
   permission,
 }: ServiceListProps) {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingService, setEditingService] = useState<null | Service>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [editingService, setEditingService] = useState<null | Service>(null)
   const servicesList = permission.hasPermission
     ? services
-    : services.slice(0, 3);
+    : services.slice(0, 3)
 
   async function handleDeleteService(serviceId: string) {
-    const response = await deleteService({ serviceId });
+    const response = await deleteService({ serviceId })
 
-    if (response.error) return;
+    if (response.error) return
 
-    toast.success(response.data);
+    toast.success(response.data)
   }
 
   function handleEditService(service: Service) {
-    setEditingService(service);
-    setIsDialogOpen(true);
+    setEditingService(service)
+    setIsDialogOpen(true)
   }
 
   return (
     <Dialog
       open={isDialogOpen}
       onOpenChange={(open) => {
-        setIsDialogOpen(open);
+        setIsDialogOpen(open)
 
         if (!open) {
-          setEditingService(null);
+          setEditingService(null)
         }
       }}
     >
       <section className="mx-auto">
         <Card>
-          <CardHeader className="flex flex-row justify-between items-center space-y-0 pb-2">
-            <CardTitle className="font-bold text-xl md:text-2xl">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-xl font-bold md:text-2xl">
               Serviços
             </CardTitle>
 
@@ -83,7 +74,7 @@ export default function ServicesList({
             {!permission.hasPermission && (
               <Link
                 href="/dashboard/plans"
-                className="text-red-600 animate-pulse"
+                className="animate-pulse text-red-600"
               >
                 Limite de serviços atingido
               </Link>
@@ -91,15 +82,15 @@ export default function ServicesList({
 
             <DialogContent
               onInteractOutside={(e) => {
-                e.preventDefault();
-                setIsDialogOpen(false);
-                setEditingService(null);
+                e.preventDefault()
+                setIsDialogOpen(false)
+                setEditingService(null)
               }}
             >
               <ServiceDialog
                 closeModal={() => {
-                  setIsDialogOpen(false);
-                  setEditingService(null);
+                  setIsDialogOpen(false)
+                  setEditingService(null)
                 }}
                 serviceId={editingService?.id}
                 initialValues={
@@ -110,7 +101,7 @@ export default function ServicesList({
                           .toFixed(2)
                           .replace(".", ","),
                         hours: Math.floor(
-                          editingService.duration / 60
+                          editingService.duration / 60,
                         ).toString(),
                         minutes: (editingService.duration % 60).toString(),
                       }
@@ -121,11 +112,11 @@ export default function ServicesList({
           </CardHeader>
 
           <CardContent>
-            <section className="space-y-4 mt-5">
+            <section className="mt-5 space-y-4">
               {servicesList.map((service) => (
                 <article
                   key={service.id}
-                  className="flex justify-between items-center"
+                  className="flex items-center justify-between"
                 >
                   <div className="flex items-center space-x-2 text-xs sm:text-sm lg:text-base">
                     <span className="font-medium">{service.name}</span>
@@ -160,5 +151,5 @@ export default function ServicesList({
         </Card>
       </section>
     </Dialog>
-  );
+  )
 }

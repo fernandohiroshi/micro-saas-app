@@ -1,10 +1,10 @@
-"use server";
+"use server"
 
-import prisma from "@/lib/prisma";
+import prisma from "@/lib/prisma"
 
 export async function getReminders({ userId }: { userId: string }) {
   if (!userId) {
-    return [];
+    return []
   }
 
   try {
@@ -12,11 +12,11 @@ export async function getReminders({ userId }: { userId: string }) {
       where: {
         userId: userId,
       },
-    });
+    })
 
-    return reminders;
+    return reminders
   } catch (err) {
-    console.log(err);
-    return [];
+    console.log(err)
+    return []
   }
 }

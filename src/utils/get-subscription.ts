@@ -1,10 +1,10 @@
-"use server";
+"use server"
 
-import prisma from "@/lib/prisma";
+import prisma from "@/lib/prisma"
 
 export async function getSubscription({ userId }: { userId: string }) {
   if (!userId) {
-    return null;
+    return null
   }
 
   try {
@@ -12,11 +12,11 @@ export async function getSubscription({ userId }: { userId: string }) {
       where: {
         userId: userId,
       },
-    });
+    })
 
-    return subscription;
+    return subscription
   } catch (err) {
-    console.log(err);
-    return null;
+    console.log(err)
+    return null
   }
 }

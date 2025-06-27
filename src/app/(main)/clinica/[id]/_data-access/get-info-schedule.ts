@@ -1,11 +1,11 @@
-"use server";
+"use server"
 
-import prisma from "@/lib/prisma";
+import prisma from "@/lib/prisma"
 
 export async function getInfoSchedule({ userId }: { userId: string }) {
   try {
     if (!userId) {
-      return null;
+      return null
     }
 
     const user = await prisma.user.findFirst({
@@ -20,14 +20,14 @@ export async function getInfoSchedule({ userId }: { userId: string }) {
           },
         },
       },
-    });
+    })
 
     if (!user) {
-      return null;
+      return null
     }
 
-    return user;
+    return user
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
 }

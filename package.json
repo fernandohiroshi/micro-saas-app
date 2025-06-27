@@ -2,13 +2,15 @@
   "name": "saas-nextjs",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && npx prisma migrate deploy && next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhook"
+    "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhook",
+    "format": "prettier --write . && eslint . --fix"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.9.1",
@@ -41,10 +43,21 @@
     "zod": "^3.25.63"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@typescript-eslint/eslint-plugin": "^8.35.0",
+    "@typescript-eslint/parser": "^8.35.0",
+    "eslint": "^9.30.0",
+    "eslint-config-next": "^15.3.4",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.1",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.13",
     "prisma": "^6.9.0",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.4",

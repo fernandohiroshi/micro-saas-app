@@ -1,29 +1,30 @@
-"use server";
+"use server"
 
-import { auth } from "@/lib/auth";
-import { PlanDetailInfo } from "./get-plans";
-import prisma from "@/lib/prisma";
-import { canCreateService } from "./canCreateService";
+import { auth } from "@/lib/auth"
+import prisma from "@/lib/prisma"
 
-export type PLAN_PROP = "BASIC" | "PROFESSIONAL" | "TRIAL" | "EXPIRED";
+import { canCreateService } from "./canCreateService"
+import { PlanDetailInfo } from "./get-plans"
 
-type TypeCheck = "service";
+export type PLAN_PROP = "BASIC" | "PROFESSIONAL" | "TRIAL" | "EXPIRED"
+
+type TypeCheck = "service"
 
 export interface ResultPermissionProps {
-  hasPermission: boolean;
-  planId: PLAN_PROP;
-  expired: boolean;
-  plan: PlanDetailInfo | null;
+  hasPermission: boolean
+  planId: PLAN_PROP
+  expired: boolean
+  plan: PlanDetailInfo | null
 }
 
 interface CanPermissionProps {
-  type: TypeCheck;
+  type: TypeCheck
 }
 
 export async function canPermission({
   type,
 }: CanPermissionProps): Promise<ResultPermissionProps> {
-  const session = await auth();
+  const session = await auth()
 
   if (!session?.user?.id) {
     return {
@@ -31,19 +32,19 @@ export async function canPermission({
       planId: "EXPIRED",
       expired: true,
       plan: null,
-    };
+    }
   }
 
   const subscription = await prisma.subscription.findFirst({
     where: {
       userId: session?.user?.id,
     },
-  });
+  })
 
   switch (type) {
     case "service":
-      const permission = await canCreateService(subscription, session);
-      return permission;
+      const permission = await canCreateService(subscription, session)
+      return permission
 
     default:
       return {
@@ -51,6 +52,6 @@ export async function canPermission({
         planId: "EXPIRED",
         expired: true,
         plan: null,
-      };
+      }
   }
 }

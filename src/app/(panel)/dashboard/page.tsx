@@ -1,27 +1,29 @@
-import { Button } from "@/components/ui/button";
-import getSession from "@/lib/getSession";
-import { Calendar } from "lucide-react";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { ButtonCopyLink } from "./_components/button-copy-link";
-import { Reminders } from "./_components/reminder/reminders";
-import { Appointments } from "./_components/appointments/appointments";
-import { checkSubscription } from "@/utils/permissions/checkSubscription";
-import { LabelSubscription } from "@/components/ui/label-subscription";
+import Link from "next/link"
+import { redirect } from "next/navigation"
 
+import { Calendar } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { LabelSubscription } from "@/components/ui/label-subscription"
+import getSession from "@/lib/getSession"
+import { checkSubscription } from "@/utils/permissions/checkSubscription"
+
+import { Appointments } from "./_components/appointments/appointments"
+import { ButtonCopyLink } from "./_components/button-copy-link"
+import { Reminders } from "./_components/reminder/reminders"
 
 export default async function Dashboard() {
-  const session = await getSession();
+  const session = await getSession()
 
   if (!session) {
-    redirect("/");
+    redirect("/")
   }
 
-  const subscription = await checkSubscription(session?.user?.id!);
+  const subscription = await checkSubscription(session?.user?.id!)
 
   return (
     <main>
-      <section className="flex justify-end items-center space-x-2">
+      <section className="flex items-center justify-end space-x-2">
         <Link href={`/clinica/${session.user?.id}`} target="_blank">
           <Button className="flex-1 md:flex-[0]">
             <Calendar />
@@ -37,17 +39,17 @@ export default async function Dashboard() {
       )}
 
       {subscription?.subscriptionStatus === "TRIAL" && (
-        <p className="text-cyan-600 font-semibold animate-pulse my-2">
+        <p className="my-2 animate-pulse font-semibold text-cyan-600">
           {subscription.message}
         </p>
       )}
 
       {subscription?.subscriptionStatus !== "EXPIRED" && (
-        <section className="gap-4 grid grid-cols-1 lg:grid-cols-2 mt-4 text-sm">
+        <section className="mt-4 grid grid-cols-1 gap-4 text-sm lg:grid-cols-2">
           <Appointments userId={session.user?.id!} />
           <Reminders userId={session.user?.id!} />
         </section>
       )}
     </main>
-  );
+  )
 }

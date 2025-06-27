@@ -1,8 +1,9 @@
-"use client";
+"use client"
 
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export const appointmentSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório"),
@@ -10,9 +11,9 @@ export const appointmentSchema = z.object({
   phone: z.string().min(1, "O telefone é obrigatório"),
   date: z.date(),
   serviceId: z.string().min(1, "O serviço é obrigatório"),
-});
+})
 
-export type AppointmentFormDate = z.infer<typeof appointmentSchema>;
+export type AppointmentFormDate = z.infer<typeof appointmentSchema>
 
 export function useAppointmentForm() {
   return useForm<AppointmentFormDate>({
@@ -24,5 +25,5 @@ export function useAppointmentForm() {
       serviceId: "",
       date: new Date(),
     },
-  });
+  })
 }

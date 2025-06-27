@@ -1,9 +1,10 @@
-import Link from "next/link";
-import { Button } from "./button";
+import Link from "next/link"
+
+import { Button } from "./button"
 
 export function LabelSubscription({ expired }: { expired: boolean }) {
   return (
-    <div className="bg-red-500 text-white text-xs sm:text-sm mdlg:text-base px-3 py-2 my-4 flex items-center justify-between gap-4 rounded-md">
+    <div className="mdlg:text-base my-4 flex items-center justify-between gap-4 rounded-md bg-red-500 px-3 py-2 text-xs text-white sm:text-sm">
       <div>
         {expired ? (
           <h3 className="font-semibold">
@@ -12,7 +13,7 @@ export function LabelSubscription({ expired }: { expired: boolean }) {
         ) : (
           <h3>Você excedeu o limite de seu plano</h3>
         )}
-        <p className="hidden xl:block text-sm text-neutral-100">
+        <p className="hidden text-sm text-neutral-100 xl:block">
           Acesse o seu plano para verificar os detalhes
         </p>
       </div>
@@ -21,5 +22,5 @@ export function LabelSubscription({ expired }: { expired: boolean }) {
         <Link href="/dashboard/plans">Acessar planos</Link>
       </Button>
     </div>
-  );
+  )
 }

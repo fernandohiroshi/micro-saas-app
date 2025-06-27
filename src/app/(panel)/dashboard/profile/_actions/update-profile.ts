@@ -1,14 +1,11 @@
-"use server";
+"use server"
 
-// Libs
-import { z } from "zod";
+import { revalidatePath } from "next/cache"
+import { z } from "zod"
 
-// App
-import { auth } from "@/lib/auth";
-import prisma from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { auth } from "@/lib/auth"
+import prisma from "@/lib/prisma"
 
-// Schema
 const formSchema = z.object({
   name: z.string().min(1, { message: "O nome é obrigatório" }),
   address: z.string().optional(),
@@ -16,26 +13,25 @@ const formSchema = z.object({
   status: z.boolean(),
   timeZone: z.string(),
   times: z.array(z.string()),
-});
+})
 
-type FormSchema = z.infer<typeof formSchema>;
+type FormSchema = z.infer<typeof formSchema>
 
-// Action
 export async function updateProfile(formData: FormSchema) {
-  const session = await auth();
+  const session = await auth()
 
   if (!session?.user?.id) {
     return {
       error: "Usuário não encontrado",
-    };
+    }
   }
 
-  const schema = formSchema.safeParse(formData);
+  const schema = formSchema.safeParse(formData)
 
   if (!schema.success) {
     return {
       error: "Preencha todos os campos",
-    };
+    }
   }
 
   try {
@@ -51,16 +47,16 @@ export async function updateProfile(formData: FormSchema) {
         timeZone: formData.timeZone,
         times: formData.times || [],
       },
-    });
+    })
 
-    revalidatePath("/dashboard/profile");
+    revalidatePath("/dashboard/profile")
 
     return {
       data: "Dados Atualizado!",
-    };
+    }
   } catch (err) {
     return {
       error: "Falha ao atualizar",
-    };
+    }
   }
 }

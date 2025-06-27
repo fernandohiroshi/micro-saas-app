@@ -1,13 +1,13 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Reminder } from "@/generated/prisma";
-import { Plus, Trash } from "lucide-react";
-import { deleteReminder } from "../../_actions/delete-reminder";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+
+import { Plus, Trash } from "lucide-react"
+import { toast } from "sonner"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -15,35 +15,39 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { ReminderContent } from "./reminder-content";
-import { useState } from "react";
+} from "@/components/ui/dialog"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Reminder } from "@/generated/prisma"
+
+import { deleteReminder } from "../../_actions/delete-reminder"
+
+import { ReminderContent } from "./reminder-content"
 
 interface ReminderListProps {
-  reminder: Reminder[];
+  reminder: Reminder[]
 }
 
 export function ReminderList({ reminder }: ReminderListProps) {
-  const router = useRouter();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const router = useRouter()
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   async function handleDeleteReminder(id: string) {
-    const response = await deleteReminder({ reminderId: id });
+    const response = await deleteReminder({ reminderId: id })
 
     if (response.error) {
-      toast.error(response.error);
-      return;
+      toast.error(response.error)
+      return
     }
 
-    toast.success(response.data);
-    router.refresh();
+    toast.success(response.data)
+    router.refresh()
   }
 
   return (
     <section className="flex flex-col gap-3">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xl md:text-2xl font-bold">
+          <CardTitle className="text-xl font-bold md:text-2xl">
             Lembretes
           </CardTitle>
 
@@ -72,11 +76,11 @@ export function ReminderList({ reminder }: ReminderListProps) {
             <p className="text-neutral-600">Nenhum lembrete registrado...</p>
           )}
 
-          <ScrollArea className="h-[340px] lg:max-h-[calc(100vh-15rem)] pr-0 w-full flex-1">
+          <ScrollArea className="h-[340px] w-full flex-1 pr-0 lg:max-h-[calc(100vh-15rem)]">
             {reminder.map((item, index) => (
               <article
                 key={item.id}
-                className="flex flex-wrap flex-row items-center justify-between py-2 mb-2 px-2 rounded-md bg-neutral-50"
+                className="mb-2 flex flex-row flex-wrap items-center justify-between rounded-md bg-neutral-50 px-2 py-2"
               >
                 <p className="text-sm lg:text-base">{item.description}</p>
                 <Button
@@ -93,5 +97,5 @@ export function ReminderList({ reminder }: ReminderListProps) {
         </CardContent>
       </Card>
     </section>
-  );
+  )
 }

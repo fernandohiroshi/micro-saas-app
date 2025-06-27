@@ -1,28 +1,30 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { Plan } from "@/generated/prisma";
-import { createSubscription } from "../_actions/create-subscription";
-import { toast } from "sonner";
-import { getStripeJs } from "@/utils/stripe-js";
+import { toast } from "sonner"
+
+import { Button } from "@/components/ui/button"
+import { Plan } from "@/generated/prisma"
+import { getStripeJs } from "@/utils/stripe-js"
+
+import { createSubscription } from "../_actions/create-subscription"
 
 interface SubscriptionButtonProps {
-  type: Plan;
+  type: Plan
 }
 
 export function SubscriptionButton({ type }: SubscriptionButtonProps) {
   async function handleCreateBilling() {
-    const { sessionId, error } = await createSubscription({ type: type });
+    const { sessionId, error } = await createSubscription({ type: type })
 
     if (error) {
-      toast.error(error);
-      return;
+      toast.error(error)
+      return
     }
 
-    const stripe = await getStripeJs();
+    const stripe = await getStripeJs()
 
     if (stripe) {
-      await stripe.redirectToCheckout({ sessionId: sessionId });
+      await stripe.redirectToCheckout({ sessionId: sessionId })
     }
   }
 
@@ -35,5 +37,5 @@ export function SubscriptionButton({ type }: SubscriptionButtonProps) {
     >
       Ativar assinatura
     </Button>
-  );
+  )
 }

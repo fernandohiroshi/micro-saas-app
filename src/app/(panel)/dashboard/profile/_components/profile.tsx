@@ -1,49 +1,12 @@
-"use client";
+"use client"
 
-// React & Next
-import { useState } from "react";
-import Image from "next/image";
+import { useState } from "react"
 
-//Image
-import userImage from "../../../../../../public/user.png";
+import { ArrowRight } from "lucide-react"
+import { toast } from "sonner"
 
-// Types
-import { Prisma } from "@/generated/prisma";
-
-// Actions
-import { updateProfile } from "../_actions/update-profile";
-
-// Hooks
-import { ProfileFormData, useProfileForm } from "./profile-form";
-
-// Libs
-import { cn } from "@/lib/utils";
-import { ArrowRight } from "lucide-react";
-import { toast } from "sonner";
-
-// Utils
-import { extractPhoneNumber, formatPhone } from "@/utils/formatPhone";
-
-// UI Components
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -51,24 +14,46 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Avatar } from "./profile-avatar";
+} from "@/components/ui/dialog"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Prisma } from "@/generated/prisma"
+import { cn } from "@/lib/utils"
+import { extractPhoneNumber, formatPhone } from "@/utils/formatPhone"
+
+import { updateProfile } from "../_actions/update-profile"
+
+import { Avatar } from "./profile-avatar"
+import { ProfileFormData, useProfileForm } from "./profile-form"
 
 type UserWithSubscription = Prisma.UserGetPayload<{
   include: {
-    subscription: true;
-  };
-}>;
+    subscription: true
+  }
+}>
 
 interface ProfileContentProps {
-  user: UserWithSubscription;
+  user: UserWithSubscription
 }
 
 export function ProfileContent({ user }: ProfileContentProps) {
-  const [selectedHours, setSelectedHours] = useState<string[]>(
-    user.times ?? []
-  );
-  const [dialogIsOpen, setDialogIsOpen] = useState(false);
+  const [selectedHours, setSelectedHours] = useState<string[]>(user.times ?? [])
+  const [dialogIsOpen, setDialogIsOpen] = useState(false)
 
   const form = useProfileForm({
     name: user.name,
@@ -76,35 +61,33 @@ export function ProfileContent({ user }: ProfileContentProps) {
     phone: user.phone,
     status: user.status,
     timeZone: user.timeZone,
-  });
+  })
 
   // Generate available time slots from 08:00 to 22:30 (every 30 minutes)
   function generateTimeSlots(): string[] {
-    const hours: string[] = [];
+    const hours: string[] = []
 
     for (let i = 8; i <= 22; i++) {
       for (let j = 0; j < 2; j++) {
-        const hour = i.toString().padStart(2, "0");
-        const minuts = (j * 30).toString().padStart(2, "0");
-        hours.push(`${hour}:${minuts}`);
+        const hour = i.toString().padStart(2, "0")
+        const minuts = (j * 30).toString().padStart(2, "0")
+        hours.push(`${hour}:${minuts}`)
       }
     }
 
-    return hours;
+    return hours
   }
 
-  const hours = generateTimeSlots();
+  const hours = generateTimeSlots()
 
-  // Toggle time selection (add or remove)
   function toggleHour(hour: string) {
     setSelectedHours((prev) =>
       prev.includes(hour)
         ? prev.filter((h) => h !== hour)
-        : [...prev, hour].sort()
-    );
+        : [...prev, hour].sort(),
+    )
   }
 
-  // Filter available time zones
   const timeZones = Intl.supportedValuesOf("timeZone").filter(
     (zone) =>
       zone.startsWith("America/Sao_Paulo") ||
@@ -113,12 +96,11 @@ export function ProfileContent({ user }: ProfileContentProps) {
       zone.startsWith("America/Bahia") ||
       zone.startsWith("America/Belem") ||
       zone.startsWith("America/Manaus") ||
-      zone.startsWith("America/Cuiaba")
-  );
+      zone.startsWith("America/Cuiaba"),
+  )
 
-  // Handle form submission and update user profile data
   async function onSubmit(values: ProfileFormData) {
-    const extractValue = extractPhoneNumber(values.phone || "");
+    const extractValue = extractPhoneNumber(values.phone || "")
 
     const response = await updateProfile({
       name: values.name,
@@ -127,14 +109,14 @@ export function ProfileContent({ user }: ProfileContentProps) {
       status: values.status === "active" ? true : false,
       timeZone: values.timeZone,
       times: selectedHours || [],
-    });
+    })
 
     if (response.error) {
-      toast.error(response.error, { closeButton: true });
-      return;
+      toast.error(response.error, { closeButton: true })
+      return
     }
 
-    toast.success(response.data);
+    toast.success(response.data)
   }
 
   return (
@@ -143,7 +125,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card>
             <CardHeader>
-              <CardTitle className="font-bold text-xl md:text-2xl">
+              <CardTitle className="text-xl font-bold md:text-2xl">
                 Meus dados
               </CardTitle>
             </CardHeader>
@@ -153,7 +135,6 @@ export function ProfileContent({ user }: ProfileContentProps) {
               </div>
 
               <div className="space-y-4">
-                {/* NAME */}
                 <FormField
                   control={form.control}
                   name="name"
@@ -171,7 +152,6 @@ export function ProfileContent({ user }: ProfileContentProps) {
                   )}
                 />
 
-                {/* ADDRESS */}
                 <FormField
                   control={form.control}
                   name="address"
@@ -186,7 +166,6 @@ export function ProfileContent({ user }: ProfileContentProps) {
                   )}
                 />
 
-                {/* PHONE */}
                 <FormField
                   control={form.control}
                   name="phone"
@@ -198,8 +177,8 @@ export function ProfileContent({ user }: ProfileContentProps) {
                           {...field}
                           placeholder="Digite o telefone ..."
                           onChange={(e) => {
-                            const formattedValue = formatPhone(e.target.value);
-                            field.onChange(formattedValue);
+                            const formattedValue = formatPhone(e.target.value)
+                            field.onChange(formattedValue)
                           }}
                         />
                       </FormControl>
@@ -208,7 +187,6 @@ export function ProfileContent({ user }: ProfileContentProps) {
                   )}
                 />
 
-                {/* STATUS */}
                 <FormField
                   control={form.control}
                   name="status"
@@ -240,7 +218,6 @@ export function ProfileContent({ user }: ProfileContentProps) {
                   )}
                 />
 
-                {/* TIME SELECTION MODAL */}
                 <div className="space-y-2">
                   <Label className="font-semibold">Configurar Horários:</Label>
 
@@ -248,7 +225,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                     <DialogTrigger asChild>
                       <Button
                         variant="outline"
-                        className="justify-between w-full font-normal"
+                        className="w-full justify-between font-normal"
                       >
                         Clique aqui para selecionar horários
                         <ArrowRight />
@@ -269,7 +246,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                           Clique nos horários para marcar ou desmarcar:
                         </p>
 
-                        <div className="gap-2 grid grid-cols-4 md:grid-cols-5">
+                        <div className="grid grid-cols-4 gap-2 md:grid-cols-5">
                           {hours.map((hour) => (
                             <Button
                               key={hour}
@@ -277,7 +254,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                               className={cn(
                                 "h-10",
                                 selectedHours.includes(hour) &&
-                                  "border-cyan-500 border-2"
+                                  "border-2 border-cyan-500",
                               )}
                               onClick={() => toggleHour(hour)}
                             >
@@ -297,7 +274,6 @@ export function ProfileContent({ user }: ProfileContentProps) {
                   </Dialog>
                 </div>
 
-                {/* TIME ZONE SELECTION */}
                 <FormField
                   control={form.control}
                   name="timeZone"
@@ -327,7 +303,6 @@ export function ProfileContent({ user }: ProfileContentProps) {
                   )}
                 />
 
-                {/* SUBMIT BUTTON */}
                 <div className="flex justify-end">
                   <Button type="submit" className="w-fit">
                     Salvar alterações
@@ -339,5 +314,5 @@ export function ProfileContent({ user }: ProfileContentProps) {
         </form>
       </Form>
     </section>
-  );
+  )
 }

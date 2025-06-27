@@ -1,44 +1,44 @@
-"use server";
+"use server"
 
-import { auth } from "@/lib/auth";
-import prisma from "@/lib/prisma";
-import { stripe } from "@/utils/stripe";
-import { Plan } from "@/generated/prisma";
+import { Plan } from "@/generated/prisma"
+import { auth } from "@/lib/auth"
+import prisma from "@/lib/prisma"
+import { stripe } from "@/utils/stripe"
 
 interface SubscriptionProps {
-  type: Plan;
+  type: Plan
 }
 
 export async function createSubscription({ type }: SubscriptionProps) {
-  const session = await auth();
-  const userId = session?.user?.id;
+  const session = await auth()
+  const userId = session?.user?.id
 
   if (!userId) {
     return {
       sessionId: "",
       error: "Falha ao ativar plano",
-    };
+    }
   }
 
   const findUser = await prisma.user.findFirst({
     where: {
       id: userId,
     },
-  });
+  })
 
   if (!findUser) {
     return {
       sessionId: "",
       error: "Falha ao ativar plano",
-    };
+    }
   }
 
-  let customerId = findUser.stripe_customer_id;
+  let customerId = findUser.stripe_customer_id
 
   if (!customerId) {
     const striperCustomer = await stripe.customers.create({
       email: findUser.email,
-    });
+    })
 
     await prisma.user.update({
       where: {
@@ -47,9 +47,9 @@ export async function createSubscription({ type }: SubscriptionProps) {
       data: {
         stripe_customer_id: striperCustomer.id,
       },
-    });
+    })
 
-    customerId = striperCustomer.id;
+    customerId = striperCustomer.id
   }
 
   try {
@@ -73,17 +73,17 @@ export async function createSubscription({ type }: SubscriptionProps) {
       allow_promotion_codes: true,
       success_url: process.env.STRIPE_SUCCESS_URL,
       cancel_url: process.env.STRIPE_CANCEL_URL,
-    });
+    })
 
     return {
       sessionId: stripeCheckoutSession.id,
-    };
+    }
   } catch (err) {
-    console.log(err);
+    console.log(err)
 
     return {
       sessionId: "",
       error: "Falha ao ativar plano",
-    };
+    }
   }
 }

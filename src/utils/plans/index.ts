@@ -1,11 +1,11 @@
 export type PlanDetailsProps = {
-  maxServices: number;
-};
+  maxServices: number
+}
 
 export type PlansProps = {
-  BASIC: PlanDetailsProps;
-  PROFESSIONAL: PlanDetailsProps;
-};
+  BASIC: PlanDetailsProps
+  PROFESSIONAL: PlanDetailsProps
+}
 
 export const PLANS = {
   BASIC: {
@@ -14,7 +14,7 @@ export const PLANS = {
   PROFESSIONAL: {
     maxServices: 50,
   },
-};
+}
 
 export const subscriptionPlans = [
   {
@@ -41,4 +41,4 @@ export const subscriptionPlans = [
       "Lembretes & suporte online",
     ],
   },
-];
+]

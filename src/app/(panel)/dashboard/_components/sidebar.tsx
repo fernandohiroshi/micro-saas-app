@@ -1,17 +1,13 @@
-"use client";
+"use client"
 
-// React & Next
-import { useState } from "react";
-import { usePathname } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
+import { useState } from "react"
+import Image from "next/image"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { useRouter } from "next/navigation"
+import { signOut, useSession } from "next-auth/react"
+import clsx from "clsx"
 
-// Utils
-import clsx from "clsx";
-
-// Icons
 import {
   Banknote,
   CalendarCheck,
@@ -21,10 +17,10 @@ import {
   List,
   LogOut,
   User,
-} from "lucide-react";
+} from "lucide-react"
 
-// UI Components
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
+import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible"
 import {
   Sheet,
   SheetContent,
@@ -33,41 +29,36 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
+} from "@/components/ui/sheet"
 
-// Assets
-import Logo from "../../../../../public/logo.png";
+import Logo from "../../../../../public/logo.png"
 
-// Sidebar Component
 export default function Sidebar({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const { update } = useSession();
+  const router = useRouter()
+  const pathname = usePathname()
+  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const { update } = useSession()
 
   async function handleLogout() {
-    await signOut();
-    await update();
-    router.replace("/");
+    await signOut()
+    await update()
+    router.replace("/")
   }
 
   return (
     <div className="flex min-h-screen w-full">
-      {/* Desktop Sidebar */}
       <aside
         className={clsx(
-          "flex flex-col border-r bg-background justify-between transition-all duration-300 p-4 h-full",
+          "bg-background flex h-full flex-col justify-between border-r p-4 transition-all duration-300",
           {
             "w-20": isCollapsed,
             "w-64": !isCollapsed,
-            "hidden md:flex md:fixed": true,
-          }
+            "hidden md:fixed md:flex": true,
+          },
         )}
       >
         <div>
-          {/* Logo */}
           <div className="mt-4 mb-6">
             {!isCollapsed ? (
               <Link href="/" title="Home">
@@ -88,10 +79,9 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
             )}
           </div>
 
-          {/* Collapse Toggle */}
           <div className="flex justify-end">
             <Button
-              className=" bg-neutral-200 hover:bg-neutral-300 mb-2"
+              className="mb-2 bg-neutral-200 hover:bg-neutral-300"
               variant="outline"
               onClick={() => setIsCollapsed(!isCollapsed)}
             >
@@ -99,9 +89,8 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
             </Button>
           </div>
 
-          {/* Collapsed Navigation */}
           {isCollapsed && (
-            <nav className="flex flex-col gap-1 overflow-hidden mt-2">
+            <nav className="mt-2 flex flex-col gap-1 overflow-hidden">
               <SidebarLink
                 href="/dashboard"
                 label="Agendamento"
@@ -133,11 +122,10 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
             </nav>
           )}
 
-          {/* Expanded Navigation (Collapsible) */}
           <Collapsible open={!isCollapsed}>
             <CollapsibleContent>
               <nav className="flex flex-col gap-2 overflow-hidden">
-                <span className="text-sm text-neutral-400 font-medium uppercase mt-1">
+                <span className="mt-1 text-sm font-medium text-neutral-400 uppercase">
                   Painel
                 </span>
                 <SidebarLink
@@ -154,7 +142,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
                   isCollapses={isCollapsed}
                   icon={<Folder />}
                 />
-                <span className="text-sm text-neutral-400 font-medium uppercase mt-1">
+                <span className="mt-1 text-sm font-medium text-neutral-400 uppercase">
                   Configurações
                 </span>
                 <SidebarLink
@@ -186,18 +174,16 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
         </Button>
       </aside>
 
-      {/* Main Content (Desktop & Mobile) */}
       <div
         className={clsx(
           "flex flex-1 flex-col transition-all duration-300 ease-in-out",
           {
             "md:ml-20": isCollapsed,
             "md:ml-64": !isCollapsed,
-          }
+          },
         )}
       >
-        {/* Mobile Header */}
-        <header className="md:hidden flex items-center justify-between border-b px-4 h-14 z-10 sticky top-0 bg-white/60">
+        <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b bg-white/60 px-4 md:hidden">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <div className="flex items-center gap-2">
               <SheetTrigger asChild>
@@ -211,13 +197,13 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
               </SheetTrigger>
 
               <Link href="/" title="Home">
-                <h1 className="text-base md:text-lg font-semibold">
+                <h1 className="text-base font-semibold md:text-lg">
                   Plan<span className="text-cyan-600">C</span>
                 </h1>
               </Link>
             </div>
 
-            <SheetContent side="right" className="sm:max-w-xs text-black">
+            <SheetContent side="right" className="text-black sm:max-w-xs">
               <SheetHeader>
                 <SheetTitle>
                   Plan<span className="text-cyan-600">C</span>
@@ -227,7 +213,6 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
                   Menu Administrativo
                 </SheetDescription>
 
-                {/* Mobile Menu Items */}
                 <nav className="grid gap-2 text-base">
                   <SidebarLink
                     href="/dashboard"
@@ -264,7 +249,6 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
                 </nav>
               </SheetHeader>
 
-              {/* Logout button */}
               <SheetFooter>
                 <Button size="sm" onClick={handleLogout}>
                   Sair da conta
@@ -274,24 +258,21 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
           </Sheet>
         </header>
 
-        {/* Main Content Area */}
-        <main className="flex-1 py-4 px-2 md:p-6">{children}</main>
+        <main className="flex-1 px-2 py-4 md:p-6">{children}</main>
       </div>
     </div>
-  );
+  )
 }
 
-// SidebarLink Component Props
 interface SidebarLinkProps {
-  href: string;
-  icon: React.ReactNode;
-  label: string;
-  pathname: string;
-  isCollapses: boolean;
-  onClick?: () => void;
+  href: string
+  icon: React.ReactNode
+  label: string
+  pathname: string
+  isCollapses: boolean
+  onClick?: () => void
 }
 
-// SidebarLink Component
 function SidebarLink({
   href,
   icon,
@@ -306,16 +287,16 @@ function SidebarLink({
         variant="outline"
         onClick={onClick}
         className={clsx(
-          "flex items-center justify-start gap-2 px-3 py-2 rounded-md font-semibold w-full",
+          "flex w-full items-center justify-start gap-2 rounded-md px-3 py-2 font-semibold",
           {
-            "bg-cyan-100 hover:bg-cyan-100 text-white": pathname === href,
+            "bg-cyan-100 text-white hover:bg-cyan-100": pathname === href,
             "text-black": pathname === href,
-          }
+          },
         )}
       >
         <span>{icon}</span>
         {!isCollapses && <span>{label}</span>}
       </Button>
     </Link>
-  );
+  )
 }

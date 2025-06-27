@@ -1,1 +1,1 @@
-export const TRIAL_DAY = 3;
+export const TRIAL_DAY = 3

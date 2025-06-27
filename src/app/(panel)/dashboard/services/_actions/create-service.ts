@@ -1,46 +1,37 @@
-"use server";
+"use server"
 
-// Next.js
-import { revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache"
+import { z } from "zod"
 
-// External libraries
-import { z } from "zod";
+import { auth } from "@/lib/auth"
+import prisma from "@/lib/prisma"
 
-// Internal libs
-import { auth } from "@/lib/auth";
-import prisma from "@/lib/prisma";
-
-// Validation schema for service creation form
 const formSchema = z.object({
   name: z.string().min(1, { message: "Service name is required" }),
   price: z.number().min(1, { message: "Service price is required" }),
   duration: z.number(),
-});
+})
 
-type FormSchema = z.infer<typeof formSchema>;
+type FormSchema = z.infer<typeof formSchema>
 
-// Action to create a new service
 export async function createNewService(formData: FormSchema) {
-  const session = await auth();
+  const session = await auth()
 
-  // Ensure user is authenticated
   if (!session?.user?.id) {
     return {
       error: "Failed to create service",
-    };
+    }
   }
 
-  // Validate form data
-  const schema = formSchema.safeParse(formData);
+  const schema = formSchema.safeParse(formData)
 
   if (!schema.success) {
     return {
       error: schema.error.issues[0].message,
-    };
+    }
   }
 
   try {
-    // Create new service in the database
     const newService = await prisma.service.create({
       data: {
         name: formData.name,
@@ -48,19 +39,18 @@ export async function createNewService(formData: FormSchema) {
         duration: formData.duration,
         userId: session.user.id,
       },
-    });
+    })
 
-    // Revalidate the services page to reflect changes
-    revalidatePath("/dashboard/services");
+    revalidatePath("/dashboard/services")
 
     return {
       data: newService,
-    };
+    }
   } catch (err) {
-    console.log(err);
+    console.log(err)
 
     return {
       error: "Failed to create service",
-    };
+    }
   }
 }

@@ -1,27 +1,22 @@
-// Imports
-import { redirect } from "next/navigation";
+import { redirect } from "next/navigation"
 
-// Libs
-import getSession from "@/lib/getSession";
+import getSession from "@/lib/getSession"
 
-// Data
-import { getUserData } from "./_data-access/get-info-user";
-
-// Components
-import { ProfileContent } from "./_components/profile";
+import { ProfileContent } from "./_components/profile"
+import { getUserData } from "./_data-access/get-info-user"
 
 export default async function Profile() {
-  const session = await getSession();
+  const session = await getSession()
 
   if (!session) {
-    redirect("/");
+    redirect("/")
   }
 
-  const user = await getUserData({ userId: session.user?.id });
+  const user = await getUserData({ userId: session.user?.id })
 
   if (!user) {
-    redirect("/");
+    redirect("/")
   }
 
-  return <ProfileContent user={user} />;
+  return <ProfileContent user={user} />
 }

@@ -1,11 +1,14 @@
-import type { Metadata } from "next";
-import { SessionAuthProvider } from "@/components/session-auth";
-import { Montserrat } from "next/font/google";
-import { Toaster } from "sonner";
-import "./globals.css";
-import { QueryClientContext } from "@/providers/queryclient";
+import type { Metadata } from "next"
+import { Montserrat } from "next/font/google"
 
-const montserrat = Montserrat({ subsets: ["latin"] });
+import { Toaster } from "sonner"
+
+import { SessionAuthProvider } from "@/components/session-auth"
+import { QueryClientContext } from "@/providers/queryclient"
+
+import "./globals.css"
+
+const montserrat = Montserrat({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "PlanC — Plataforma de Agendamento para Clínicas | Konbini Code",
@@ -31,12 +34,12 @@ export const metadata: Metadata = {
     siteName: "PlanC",
   },
   metadataBase: new URL("https://planc-saas.vercel.app"),
-};
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="pt-BR">
@@ -49,5 +52,5 @@ export default function RootLayout({
         </SessionAuthProvider>
       </body>
     </html>
-  );
+  )
 }

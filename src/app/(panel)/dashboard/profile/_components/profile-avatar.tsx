@@ -1,88 +1,90 @@
-"use client";
+"use client"
 
-import Image from "next/image";
-import { ChangeEvent, useState } from "react";
-import img from "../../../../../../public/user.png";
-import { Loader, Upload } from "lucide-react";
-import { toast } from "sonner";
-import { updateProfileAvatar } from "../_actions/update-avatar";
-import { useSession } from "next-auth/react";
+import { ChangeEvent, useState } from "react"
+import Image from "next/image"
+import { useSession } from "next-auth/react"
+
+import { Loader, Upload } from "lucide-react"
+import { toast } from "sonner"
+
+import img from "../../../../../../public/user.png"
+import { updateProfileAvatar } from "../_actions/update-avatar"
 
 interface AvatarProps {
-  avatarUrl: string | null;
-  userId: string;
+  avatarUrl: string | null
+  userId: string
 }
 
 export function Avatar({ avatarUrl, userId }: AvatarProps) {
-  const [previewImage, setPreviewImage] = useState(avatarUrl);
-  const [loading, setLoading] = useState(false);
+  const [previewImage, setPreviewImage] = useState(avatarUrl)
+  const [loading, setLoading] = useState(false)
 
-  const { update } = useSession();
+  const { update } = useSession()
 
   async function handleChange(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
-      setLoading(true);
-      const image = e.target.files[0];
+      setLoading(true)
+      const image = e.target.files[0]
 
       if (image.type !== "image/jpeg" && image.type !== "image/png") {
-        toast.error("Formato inválido! Use JPEG ou PNG.)");
-        return;
+        toast.error("Formato inválido! Use JPEG ou PNG.)")
+        return
       }
 
-      const newFileName = `${userId}`;
-      const newFile = new File([image], newFileName, { type: image.type });
+      const newFileName = `${userId}`
+      const newFile = new File([image], newFileName, { type: image.type })
 
-      const urlImage = await uploadImage(newFile);
+      const urlImage = await uploadImage(newFile)
 
       if (!urlImage || urlImage === "") {
-        toast.error("Falha ao alterar imagem!");
-        return;
+        toast.error("Falha ao alterar imagem!")
+        return
       }
 
-      setPreviewImage(urlImage);
+      setPreviewImage(urlImage)
 
-      await updateProfileAvatar({ avatarUrl: urlImage });
+      await updateProfileAvatar({ avatarUrl: urlImage })
       await update({
         image: urlImage,
-      });
+      })
 
-      setLoading(false);
+      setLoading(false)
     }
   }
 
   async function uploadImage(image: File): Promise<string | null> {
     try {
-      const formData = new FormData();
+      const formData = new FormData()
 
-      formData.append("file", image);
-      formData.append("userId", userId);
+      formData.append("file", image)
+      formData.append("userId", userId)
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_URL}/api/image/upload`,
         {
           method: "POST",
           body: formData,
-        }
-      );
+        },
+      )
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (!response.ok) {
-        return null;
+        return null
       }
 
-      toast.success("Imagem alterada com sucesso!");
-      return data.secure_url as string;
+      toast.success("Imagem alterada com sucesso!")
+      return data.secure_url as string
     } catch (err) {
-      console.log(err);
-      return null;
+      console.log(err)
+      return null
     }
   }
 
   return (
-    <div className="relative w-40 h-40 md:w-48 md:h-48">
-      <div className="relative flex items-center justify-center w-full h-full">
-        <span className="absolute bottom-2 right-2 cursor-pointer z-[2] bg-white/80 p-2 rounded-full shadow">
+    <div className="relative h-40 w-40 md:h-48 md:w-48">
+      <div className="relative flex h-full w-full items-center justify-center">
+        <span className="absolute right-2 bottom-2 z-[2] cursor-pointer rounded-full bg-white/80 p-2 shadow">
           {loading ? (
             <Loader size={16} className="animate-spin" />
           ) : (
@@ -92,7 +94,7 @@ export function Avatar({ avatarUrl, userId }: AvatarProps) {
 
         <input
           type="file"
-          className="cursor-pointer z-50 w-48 h-48 opacity-0"
+          className="z-50 h-48 w-48 cursor-pointer opacity-0"
           title="Trocar Imagem"
           onChange={handleChange}
         />
@@ -103,7 +105,7 @@ export function Avatar({ avatarUrl, userId }: AvatarProps) {
           src={previewImage}
           alt="Foto de perfil da clínica"
           fill
-          className="w-full h-48 object-cover rounded-full bg-background shadow-xl"
+          className="bg-background h-48 w-full rounded-full object-cover shadow-xl"
           quality={100}
           priority
           sizes="(max-width: 480px) 100vw, (max-heidth: 1024px) 75vw, 60vw"
@@ -113,12 +115,12 @@ export function Avatar({ avatarUrl, userId }: AvatarProps) {
           src={img}
           alt="Foto de perfil da clínica"
           fill
-          className="w-full h-48 object-cover rounded-full bg-background"
+          className="bg-background h-48 w-full rounded-full object-cover"
           quality={100}
           priority
           sizes="(max-width: 480px) 100vw, (max-heidth: 1024px) 75vw, 60vw"
         />
       )}
     </div>
-  );
+  )
 }

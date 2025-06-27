@@ -3,12 +3,13 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { AppointmentsWithService } from "./appointments-list";
-import { formatCurrency } from "@/utils/formatCurrency";
+} from "@/components/ui/dialog"
+import { formatCurrency } from "@/utils/formatCurrency"
+
+import { AppointmentsWithService } from "./appointments-list"
 
 interface AppointmentDialogProps {
-  appointments: AppointmentsWithService | null;
+  appointments: AppointmentsWithService | null
 }
 
 export function AppointmentDialog({ appointments }: AppointmentDialogProps) {
@@ -53,7 +54,7 @@ export function AppointmentDialog({ appointments }: AppointmentDialogProps) {
               }).format(new Date(appointments.appointmentDate))}
             </p>
 
-            <div className="bg-neutral-100 mt-4 rounded p-2">
+            <div className="mt-4 rounded bg-neutral-100 p-2">
               <p>
                 <span className="font-semibold">Serviço:</span>{" "}
                 {appointments.service.name}
@@ -68,5 +69,5 @@ export function AppointmentDialog({ appointments }: AppointmentDialogProps) {
         )}
       </div>
     </DialogContent>
-  );
+  )
 }

@@ -1,14 +1,15 @@
-"use server";
+"use server"
 
-import { addDays, isAfter } from "date-fns";
-import { Session } from "next-auth";
-import { ResultPermissionProps } from "./canPermission";
-import { TRIAL_DAY } from "./trial-limits";
+import { Session } from "next-auth"
+import { addDays, isAfter } from "date-fns"
+
+import { ResultPermissionProps } from "./canPermission"
+import { TRIAL_DAY } from "./trial-limits"
 
 export async function checkSubscriptionExpired(
-  session: Session
+  session: Session,
 ): Promise<ResultPermissionProps> {
-  const trialEndDate = addDays(session?.user?.createdAt!, TRIAL_DAY);
+  const trialEndDate = addDays(session?.user?.createdAt!, TRIAL_DAY)
 
   if (isAfter(new Date(), trialEndDate)) {
     return {
@@ -16,7 +17,7 @@ export async function checkSubscriptionExpired(
       planId: "EXPIRED",
       expired: true,
       plan: null,
-    };
+    }
   }
 
   return {
@@ -24,5 +25,5 @@ export async function checkSubscriptionExpired(
     planId: "TRIAL",
     expired: false,
     plan: null,
-  };
+  }
 }

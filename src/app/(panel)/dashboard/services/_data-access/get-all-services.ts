@@ -1,17 +1,16 @@
-"use server";
+"use server"
 
-// Database
-import prisma from "@/lib/prisma";
+import prisma from "@/lib/prisma"
 
 interface GetAllServicesProps {
-  userId: string;
+  userId: string
 }
 
 export async function getAllServices({ userId }: GetAllServicesProps) {
   if (!userId) {
     return {
       error: "Falha ao buscar serviços",
-    };
+    }
   }
 
   try {
@@ -20,14 +19,14 @@ export async function getAllServices({ userId }: GetAllServicesProps) {
         userId,
         status: true,
       },
-    });
+    })
 
     return {
       data: services,
-    };
+    }
   } catch (error) {
     return {
       error: "Falha ao buscar serviços",
-    };
+    }
   }
 }

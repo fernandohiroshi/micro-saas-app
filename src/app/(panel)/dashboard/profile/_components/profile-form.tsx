@@ -1,34 +1,27 @@
-"use client";
+"use client"
 
-// Schemas
-import { z } from "zod";
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
-// Form Libraries
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-// Props
+import { zodResolver } from "@hookform/resolvers/zod"
 interface UseProfileFormProps {
-  name: string | null;
-  address: string | null;
-  phone: string | null;
-  status: boolean;
-  timeZone: string | null;
+  name: string | null
+  address: string | null
+  phone: string | null
+  status: boolean
+  timeZone: string | null
 }
 
-// Validation Schema
 const profileSchema = z.object({
   name: z.string().min(1, { message: "O nome é obrigatório" }),
   address: z.string().optional(),
   phone: z.string().optional(),
   status: z.string(),
   timeZone: z.string().min(1, { message: "O time zone é obrigatório" }),
-});
+})
 
-// Types
-export type ProfileFormData = z.infer<typeof profileSchema>;
+export type ProfileFormData = z.infer<typeof profileSchema>
 
-// Hook
 export function useProfileForm({
   name,
   address,
@@ -45,5 +38,5 @@ export function useProfileForm({
       status: status ? "active" : "inactive",
       timeZone: timeZone || "",
     },
-  });
+  })
 }

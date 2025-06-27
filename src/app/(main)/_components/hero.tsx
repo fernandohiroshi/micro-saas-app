@@ -1,19 +1,19 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import doctorImg from "../../../../public/hero.png";
+import Image from "next/image"
+
+import doctorImg from "../../../../public/hero.png"
 
 export function Hero() {
   return (
     <section className="bg-neutral-100">
-      <div className="container mx-auto px-4 pt-30 pb-8 lg:pb-0 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 pt-30 pb-8 sm:px-6 lg:px-8 lg:pb-0">
         <main className="flex items-center justify-center">
-          <article className="flex-[2] max-w-4xl space-y-8 flex flex-col justify-center">
-            <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold md:leading-12 max-w-2xl tracking-tight">
+          <article className="flex max-w-4xl flex-[2] flex-col justify-center space-y-8">
+            <h1 className="max-w-2xl text-2xl font-bold tracking-tight md:text-4xl md:leading-12 lg:text-5xl">
               Encontre os melhores <br />
               <span className="text-cyan-600">profissionais</span>
               <br className="sm:hidden lg:block" /> em um único local!
             </h1>
-            <p className="max-w-xl text-sm md:text-lg text-gray-700 ">
+            <p className="max-w-xl text-sm text-gray-700 md:text-lg">
               Nós somos uma plataforma para profissionais da saúde com foco em
               agilizar seu atendimento de forma simplificada e organizada.
             </p>
@@ -33,5 +33,5 @@ export function Hero() {
         </main>
       </div>
     </section>
-  );
+  )
 }

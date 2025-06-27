@@ -1,6 +1,6 @@
-"use server";
+"use server"
 
-import prisma from "@/lib/prisma";
+import prisma from "@/lib/prisma"
 
 export async function getProfessionals() {
   try {
@@ -11,10 +11,10 @@ export async function getProfessionals() {
       include: {
         subscription: true,
       },
-    });
+    })
 
-    return professionals;
+    return professionals
   } catch (err) {
-    return [];
+    return []
   }
 }

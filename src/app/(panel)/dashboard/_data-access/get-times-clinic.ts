@@ -1,13 +1,13 @@
-"use server";
+"use server"
 
-import prisma from "@/lib/prisma";
+import prisma from "@/lib/prisma"
 
 export async function getTimesClinic({ userId }: { userId: string }) {
   if (!userId) {
     return {
       times: [],
       userId: "",
-    };
+    }
   }
 
   try {
@@ -19,25 +19,25 @@ export async function getTimesClinic({ userId }: { userId: string }) {
         id: true,
         times: true,
       },
-    });
+    })
 
     if (!user) {
       return {
         times: [],
         userId: "",
-      };
+      }
     }
 
     return {
       times: user.times,
       userId: user.id,
-    };
+    }
   } catch (err) {
-    console.log(err);
+    console.log(err)
 
     return {
       times: [],
       userId: "",
-    };
+    }
   }
 }

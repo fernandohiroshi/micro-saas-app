@@ -1,79 +1,84 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Prisma } from "@/generated/prisma";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { Eye, X } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { cancelAppointment } from "../../_actions/cancel-appointment";
-import { toast } from "sonner";
-import { useState } from "react";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { AppointmentDialog } from "./appointment-dialog";
-import { ButtonPickerAppointment } from "./button-date";
-import { PuffLoader } from "react-spinners";
+import { useState } from "react"
+import { PuffLoader } from "react-spinners"
+import { useSearchParams } from "next/navigation"
+import { format } from "date-fns"
+
+import { Eye, X } from "lucide-react"
+import { toast } from "sonner"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogTrigger } from "@/components/ui/dialog"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Prisma } from "@/generated/prisma"
+
+import { cancelAppointment } from "../../_actions/cancel-appointment"
+
+import { AppointmentDialog } from "./appointment-dialog"
+import { ButtonPickerAppointment } from "./button-date"
+
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 export type AppointmentsWithService = Prisma.AppointmentGetPayload<{
   include: {
-    service: true;
-  };
-}>;
+    service: true
+  }
+}>
 
 interface AppointmestListProps {
-  times: string[];
+  times: string[]
 }
 
 export function AppointmentsList({ times }: AppointmestListProps) {
-  const searchParams = useSearchParams();
-  const date = searchParams.get("date");
-  const queryClient = useQueryClient();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const searchParams = useSearchParams()
+  const date = searchParams.get("date")
+  const queryClient = useQueryClient()
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [detailAppointment, setDetailAppointment] =
-    useState<AppointmentsWithService | null>(null);
+    useState<AppointmentsWithService | null>(null)
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["get-appointments", date],
     queryFn: async () => {
-      let activeDate = date;
+      let activeDate = date
 
       if (!activeDate) {
-        const today = format(new Date(), "yyyy-MM-dd");
-        activeDate = today;
+        const today = format(new Date(), "yyyy-MM-dd")
+        activeDate = today
       }
 
-      const url = `${process.env.NEXT_PUBLIC_URL}/api/clinic/appointments?date=${activeDate}`;
+      const url = `${process.env.NEXT_PUBLIC_URL}/api/clinic/appointments?date=${activeDate}`
 
-      const response = await fetch(url);
+      const response = await fetch(url)
 
-      const json = (await response.json()) as AppointmentsWithService[];
+      const json = (await response.json()) as AppointmentsWithService[]
 
       if (!response.ok) {
-        return [];
+        return []
       }
 
-      return json;
+      return json
     },
     staleTime: 20000,
     refetchInterval: 60000,
-  });
+  })
 
-  const occupantMap: Record<string, AppointmentsWithService> = {};
+  const occupantMap: Record<string, AppointmentsWithService> = {}
 
   if (data && data.length > 0) {
     for (const appointment of data) {
-      const requiredSlots = Math.ceil(appointment.service.duration / 30);
+      const requiredSlots = Math.ceil(appointment.service.duration / 30)
 
-      const startIndex = times.indexOf(appointment.time);
+      const startIndex = times.indexOf(appointment.time)
 
       if (startIndex !== -1) {
         for (let i = 0; i < requiredSlots; i++) {
-          const slotIndex = startIndex + i;
+          const slotIndex = startIndex + i
 
           if (slotIndex < times.length) {
-            occupantMap[times[slotIndex]] = appointment;
+            occupantMap[times[slotIndex]] = appointment
           }
         }
       }
@@ -81,22 +86,22 @@ export function AppointmentsList({ times }: AppointmestListProps) {
   }
 
   async function handleCancelAppointment(appointmentId: string) {
-    const response = await cancelAppointment({ appointmentId: appointmentId });
+    const response = await cancelAppointment({ appointmentId: appointmentId })
 
     if (response.error) {
-      toast.error(response.error);
-      return;
+      toast.error(response.error)
+      return
     }
-    queryClient.invalidateQueries({ queryKey: ["get-appointments"] });
-    await refetch();
-    toast.success(response.data);
+    queryClient.invalidateQueries({ queryKey: ["get-appointments"] })
+    await refetch()
+    toast.success(response.data)
   }
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xl md:text-2xl font-bold">
+          <CardTitle className="text-xl font-bold md:text-2xl">
             Agendamentos
           </CardTitle>
 
@@ -104,29 +109,29 @@ export function AppointmentsList({ times }: AppointmestListProps) {
         </CardHeader>
 
         <CardContent>
-          <ScrollArea className="h-[calc(100vh-20rem)] lg:h-[calc(100vh-15rem)] pr-4">
+          <ScrollArea className="h-[calc(100vh-20rem)] pr-4 lg:h-[calc(100vh-15rem)]">
             {isLoading ? (
-              <div className="flex justify-center items-start mt-8">
+              <div className="mt-8 flex items-start justify-center">
                 <PuffLoader size="100px" color="darkcyan" />
               </div>
             ) : (
               times.map((slot) => {
-                const occupant = occupantMap[slot];
+                const occupant = occupantMap[slot]
 
                 if (occupant) {
                   return (
                     <div
                       key={slot}
-                      className="flex items-center py-2 border-t last:border-b bg-neutral-50 p-2"
+                      className="flex items-center border-t bg-neutral-50 p-2 py-2 last:border-b"
                     >
                       <div className="w-16 text-sm font-semibold">{slot}</div>
 
-                      <div className="flex-1 text-sm text-neutral-700 ">
+                      <div className="flex-1 text-sm text-neutral-700">
                         <div className="font-semibold">{occupant.name}</div>
                         <div className="text-neutral-700">{occupant.phone}</div>
                       </div>
 
-                      <div className="ml-auto ">
+                      <div className="ml-auto">
                         <div className="flex gap-2">
                           <DialogTrigger asChild>
                             <Button
@@ -150,13 +155,13 @@ export function AppointmentsList({ times }: AppointmestListProps) {
                         </div>
                       </div>
                     </div>
-                  );
+                  )
                 }
 
                 return (
                   <div
                     key={slot}
-                    className="flex items-center py-2 border-t last:border-b p-2"
+                    className="flex items-center border-t p-2 py-2 last:border-b"
                   >
                     <div className="w-16 text-sm font-semibold">{slot}</div>
 
@@ -164,7 +169,7 @@ export function AppointmentsList({ times }: AppointmestListProps) {
                       Disponível
                     </div>
                   </div>
-                );
+                )
               })
             )}
           </ScrollArea>
@@ -173,5 +178,5 @@ export function AppointmentsList({ times }: AppointmestListProps) {
 
       <AppointmentDialog appointments={detailAppointment} />
     </Dialog>
-  );
+  )
 }

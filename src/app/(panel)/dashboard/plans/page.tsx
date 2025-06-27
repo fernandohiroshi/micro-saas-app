@@ -1,17 +1,19 @@
-import getSession from "@/lib/getSession";
-import { redirect } from "next/navigation";
-import { GridPlans } from "./_components/grid-plnas";
-import { getSubscription } from "@/utils/get-subscription";
-import { SubscriptionDetail } from "./_components/subscription-detail";
+import { redirect } from "next/navigation"
+
+import getSession from "@/lib/getSession"
+import { getSubscription } from "@/utils/get-subscription"
+
+import { GridPlans } from "./_components/grid-plnas"
+import { SubscriptionDetail } from "./_components/subscription-detail"
 
 export default async function Plans() {
-  const session = await getSession();
+  const session = await getSession()
 
   if (!session) {
-    redirect("/");
+    redirect("/")
   }
 
-  const subscription = await getSubscription({ userId: session?.user?.id });
+  const subscription = await getSubscription({ userId: session?.user?.id })
 
   return (
     <div>
@@ -21,5 +23,5 @@ export default async function Plans() {
         <SubscriptionDetail subscription={subscription!} />
       )}
     </div>
-  );
+  )
 }

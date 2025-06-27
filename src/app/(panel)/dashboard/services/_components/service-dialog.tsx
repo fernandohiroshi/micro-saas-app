@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-// React
-import { useState } from "react";
+import { useState } from "react"
 
-// UI Components
-import { Button } from "@/components/ui/button";
+import { toast } from "sonner"
+
+import { Button } from "@/components/ui/button"
 import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   Form,
   FormControl,
@@ -17,34 +17,27 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { convertRealToCents } from "@/utils/convertCurrency"
 
-// Hooks & Form
+import { createNewService } from "../_actions/create-service"
+import { updateService } from "../_actions/update-service"
+
 import {
   DialogServiceFormData,
   useDialogServiceForm,
-} from "./service-dialog-form";
-
-// Utils
-import { convertRealToCents } from "@/utils/convertCurrency";
-
-// Actions
-import { createNewService } from "../_actions/create-service";
-import { updateService } from "../_actions/update-service";
-
-// External libraries
-import { toast } from "sonner";
+} from "./service-dialog-form"
 
 interface ServiceDialogProps {
-  closeModal: () => void;
-  serviceId?: string;
+  closeModal: () => void
+  serviceId?: string
   initialValues?: {
-    name: string;
-    price: string;
-    hours: string;
-    minutes: string;
-  };
+    name: string
+    price: string
+    hours: string
+    minutes: string
+  }
 }
 
 export default function ServiceDialog({
@@ -52,20 +45,17 @@ export default function ServiceDialog({
   serviceId,
   initialValues,
 }: ServiceDialogProps) {
-  const [loading, setLoading] = useState(false);
-  const form = useDialogServiceForm({ initialValues });
+  const [loading, setLoading] = useState(false)
+  const form = useDialogServiceForm({ initialValues })
 
-  // Handle form submission
   async function onSubmit(values: DialogServiceFormData) {
-    setLoading(true);
+    setLoading(true)
 
-    // Convert BRL string price to cents (e.g., "100,00" => 10000)
-    const priceInCents = convertRealToCents(values.price);
+    const priceInCents = convertRealToCents(values.price)
 
-    // Calculate total duration in minutes
-    const hours = parseInt(values.hours) || 0;
-    const minutes = parseInt(values.minutes) || 0;
-    const duration = hours * 60 + minutes;
+    const hours = parseInt(values.hours) || 0
+    const minutes = parseInt(values.minutes) || 0
+    const duration = hours * 60 + minutes
 
     if (serviceId) {
       await editServiceById({
@@ -73,76 +63,73 @@ export default function ServiceDialog({
         name: values.name,
         priceInCents,
         duration,
-      });
-      return;
+      })
+      return
     }
 
     const response = await createNewService({
       name: values.name,
       price: priceInCents,
       duration,
-    });
+    })
 
-    setLoading(false);
+    setLoading(false)
 
     if (response.error) {
-      toast.error(response.error);
-      return;
+      toast.error(response.error)
+      return
     }
 
-    toast.success("Serviço cadastrado com sucesso!");
-    handleCloseModal();
+    toast.success("Serviço cadastrado com sucesso!")
+    handleCloseModal()
   }
 
-  // Handle update service logic
   async function editServiceById({
     serviceId,
     name,
     priceInCents,
     duration,
   }: {
-    serviceId: string;
-    name: string;
-    priceInCents: number;
-    duration: number;
+    serviceId: string
+    name: string
+    priceInCents: number
+    duration: number
   }) {
     const response = await updateService({
       serviceId,
       name,
       price: priceInCents,
       duration,
-    });
+    })
 
-    setLoading(false);
+    setLoading(false)
 
     if (response.error) {
-      toast.error(response.error);
-      return;
+      toast.error(response.error)
+      return
     }
 
-    toast.success(response.data);
-    handleCloseModal();
+    toast.success(response.data)
+    handleCloseModal()
   }
 
-  // Reset form and close modal
   function handleCloseModal() {
-    form.reset();
-    closeModal();
+    form.reset()
+    closeModal()
   }
 
-  // Format input value as BRL currency (e.g., 123456 => 1.234,56)
   function changeCurrency(event: React.ChangeEvent<HTMLInputElement>) {
-    let { value } = event.target;
-    value = value.replace(/\D/g, "");
+    let { value } = event.target
+    value = value.replace(/\D/g, "")
 
     if (value) {
-      value = (parseInt(value, 10) / 100).toFixed(2);
-      value = value.replace(".", ",");
-      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      value = (parseInt(value, 10) / 100).toFixed(2)
+      value = value.replace(".", ",")
+      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
     }
 
-    event.target.value = value;
-    form.setValue("price", value);
+    event.target.value = value
+    form.setValue("price", value)
   }
 
   return (
@@ -155,7 +142,6 @@ export default function ServiceDialog({
       <Form {...form}>
         <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-4">
-            {/* Service name input */}
             <FormField
               control={form.control}
               name="name"
@@ -172,7 +158,6 @@ export default function ServiceDialog({
               )}
             />
 
-            {/* Service price input with currency formatting */}
             <FormField
               control={form.control}
               name="price"
@@ -197,7 +182,6 @@ export default function ServiceDialog({
           <p className="font-semibold">Tempo de duração do serviço:</p>
 
           <div className="grid grid-cols-2 gap-4">
-            {/* Hours input */}
             <FormField
               control={form.control}
               name="hours"
@@ -212,7 +196,6 @@ export default function ServiceDialog({
               )}
             />
 
-            {/* Minutes input */}
             <FormField
               control={form.control}
               name="minutes"
@@ -228,10 +211,9 @@ export default function ServiceDialog({
             />
           </div>
 
-          {/* Submit button */}
           <Button
             type="submit"
-            className="w-full font-semibold mt-2"
+            className="mt-2 w-full font-semibold"
             disabled={loading}
           >
             {loading ? (
@@ -243,5 +225,5 @@ export default function ServiceDialog({
         </form>
       </Form>
     </>
-  );
+  )
 }

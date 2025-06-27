@@ -1,12 +1,12 @@
-import { Star } from "lucide-react";
+import { Star } from "lucide-react"
 
 export function PremiumCardBadge() {
   return (
     <div title="Plano PRO">
       <Star
         size={32}
-        className="absolute right-2 top-2 text-white rounded-full p-1 bg-yellow-500 animate-pulse z-[2]"
+        className="absolute top-2 right-2 z-[2] animate-pulse rounded-full bg-yellow-500 p-1 text-white"
       />
     </div>
-  );
+  )
 }

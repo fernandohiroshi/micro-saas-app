@@ -1,10 +1,11 @@
-"use server";
+"use server"
 
-import { Plan } from "@/generated/prisma";
-import { PlansProps } from "../plans/index";
+import { Plan } from "@/generated/prisma"
+
+import { PlansProps } from "../plans/index"
 
 export interface PlanDetailInfo {
-  maxServices: number;
+  maxServices: number
 }
 
 const PLANS_LIMITS: PlansProps = {
@@ -14,8 +15,8 @@ const PLANS_LIMITS: PlansProps = {
   PROFESSIONAL: {
     maxServices: 50,
   },
-};
+}
 
 export async function getPlan(planId: Plan) {
-  return PLANS_LIMITS[planId];
+  return PLANS_LIMITS[planId]
 }

@@ -1,39 +1,42 @@
-"use client";
+"use client"
 
-import { useSession } from "next-auth/react";
-import { useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { useState } from "react"
+import {
+  BiLogoFacebookCircle,
+  BiLogoGmail,
+  BiLogoInstagram,
+  BiLogoTwitter,
+} from "react-icons/bi"
+import { PuffLoader } from "react-spinners"
+import Link from "next/link"
+import { useSession } from "next-auth/react"
+
+import { LogIn, Menu } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import {
-  BiLogoInstagram,
-  BiLogoFacebookCircle,
-  BiLogoTwitter,
-  BiLogoGmail,
-} from "react-icons/bi";
-import { handleRegister } from "../_actions/login";
-import { PuffLoader } from "react-spinners";
-import { LogIn, Menu } from "lucide-react";
+} from "@/components/ui/sheet"
+
+import { handleRegister } from "../_actions/login"
 
 export function Header() {
-  const { data: session, status } = useSession();
-  const [isOpen, setIsOpen] = useState(false);
+  const { data: session, status } = useSession()
+  const [isOpen, setIsOpen] = useState(false)
 
   const navItems = [
     { href: "/", label: "Instagram", icon: BiLogoInstagram },
     { href: "/", label: "Twitter", icon: BiLogoTwitter },
     { href: "/", label: "Gmail", icon: BiLogoGmail },
     { href: "/", label: "Facebook", icon: BiLogoFacebookCircle },
-  ];
+  ]
 
   async function handleLogin() {
-    await handleRegister("google");
+    await handleRegister("google")
   }
 
   const NavLinks = () => (
@@ -48,7 +51,7 @@ export function Header() {
         >
           <Link
             href={item.href}
-            className="flex items-center hover:text-cyan-500 duration-200 ease-in-out font-semibold"
+            className="flex items-center font-semibold duration-200 ease-in-out hover:text-cyan-500"
           >
             <item.icon />
             <span className="md:hidden">{item.label}</span>
@@ -69,17 +72,17 @@ export function Header() {
         </Button>
       )}
     </>
-  );
+  )
 
   return (
-    <header className="fixed top-0 right-0 left-0 z-[999] py-6 px-4 bg-white/80 backdrop-blur-sm shadow">
+    <header className="fixed top-0 right-0 left-0 z-[999] bg-white/80 px-4 py-6 shadow backdrop-blur-sm">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="text-3xl font-bold">
           Plan<span className="text-cyan-600">C</span>
         </Link>
 
         {/* DESKTOP */}
-        <nav className="hidden md:flex items-center gap-2">
+        <nav className="hidden items-center gap-2 md:flex">
           <NavLinks />
         </nav>
 
@@ -93,7 +96,7 @@ export function Header() {
 
           <SheetContent
             side="right"
-            className="w-[240px] sm:w-[300px] z-[9999] bg-white/80 backdrop-blur-sm"
+            className="z-[9999] w-[240px] bg-white/80 backdrop-blur-sm sm:w-[300px]"
           >
             <SheetHeader>
               <SheetTitle className="mb-8">Menu</SheetTitle>
@@ -103,5 +106,5 @@ export function Header() {
         </Sheet>
       </div>
     </header>
-  );
+  )
 }

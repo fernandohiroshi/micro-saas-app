@@ -1,5 +1,10 @@
-"use client";
+"use client"
 
+import { useRouter } from "next/navigation"
+
+import { toast } from "sonner"
+
+import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -7,35 +12,34 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { ReminderFormdata, useReminderForm } from "./reminder-form";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { createReminder } from "../../_actions/create-reminder";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+} from "@/components/ui/form"
+import { Textarea } from "@/components/ui/textarea"
+
+import { createReminder } from "../../_actions/create-reminder"
+
+import { ReminderFormdata, useReminderForm } from "./reminder-form"
 
 interface ReminderContentProps {
-  closeDialog: () => void;
+  closeDialog: () => void
 }
 
 export function ReminderContent({ closeDialog }: ReminderContentProps) {
-  const form = useReminderForm();
-  const router = useRouter();
+  const form = useReminderForm()
+  const router = useRouter()
 
   async function onSubmit(formData: ReminderFormdata) {
     const response = await createReminder({
       description: formData.description,
-    });
+    })
 
     if (response.error) {
-      toast.error(response.error);
-      return;
+      toast.error(response.error)
+      return
     }
 
-    toast.success(response.data);
-    router.refresh();
-    closeDialog();
+    toast.success(response.data)
+    router.refresh()
+    closeDialog()
   }
   return (
     <div className="grid gap-4 py-4">
@@ -56,7 +60,7 @@ export function ReminderContent({ closeDialog }: ReminderContentProps) {
                   <Textarea
                     {...field}
                     placeholder=""
-                    className="resize-none max-h-52"
+                    className="max-h-52 resize-none"
                   />
                 </FormControl>
                 <FormMessage />
@@ -70,5 +74,5 @@ export function ReminderContent({ closeDialog }: ReminderContentProps) {
         </form>
       </Form>
     </div>
-  );
+  )
 }

@@ -1,7 +1,8 @@
-"use server";
+"use server"
 
-import prisma from "@/lib/prisma";
-import { z } from "zod";
+import { z } from "zod"
+
+import prisma from "@/lib/prisma"
 
 const formSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório"),
@@ -11,27 +12,27 @@ const formSchema = z.object({
   serviceId: z.string().min(1, "O serviço é obrigatório"),
   time: z.string().min(1, "O horário é obrigatório"),
   clinicId: z.string().min(1, "O horário é obrigatório"),
-});
+})
 
-type FormSchema = z.infer<typeof formSchema>;
+type FormSchema = z.infer<typeof formSchema>
 
 export async function createNewAppointment(formData: FormSchema) {
-  const schema = formSchema.safeParse(formData);
+  const schema = formSchema.safeParse(formData)
 
   if (!schema.success) {
     return {
       error: schema.error.issues[0].message,
-    };
+    }
   }
 
   try {
-    const selectedDate = new Date(formData.date);
+    const selectedDate = new Date(formData.date)
 
-    const year = selectedDate.getFullYear();
-    const month = selectedDate.getMonth();
-    const day = selectedDate.getDate();
+    const year = selectedDate.getFullYear()
+    const month = selectedDate.getMonth()
+    const day = selectedDate.getDate()
 
-    const appointmentDate = new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
+    const appointmentDate = new Date(Date.UTC(year, month, day, 0, 0, 0, 0))
 
     const newAppointment = await prisma.appointment.create({
       data: {
@@ -43,16 +44,16 @@ export async function createNewAppointment(formData: FormSchema) {
         serviceId: formData.serviceId,
         userId: formData.clinicId,
       },
-    });
+    })
 
     return {
       date: newAppointment,
-    };
+    }
   } catch (err) {
-    console.log(err);
+    console.log(err)
 
     return {
       error: "Erro ao cadastrar agendamento",
-    };
+    }
   }
 }

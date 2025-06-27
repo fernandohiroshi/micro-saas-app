@@ -1,10 +1,13 @@
-"use client";
+"use client"
 
-import Image from "next/image";
-import imageTest from "../../../../../../public/user.png";
-import { MapPin } from "lucide-react";
-import { Prisma } from "@/generated/prisma";
-import { useAppointmentForm, AppointmentFormDate } from "./schedule-form";
+import { useCallback, useEffect, useState } from "react"
+import { PuffLoader } from "react-spinners"
+import Image from "next/image"
+
+import { MapPin } from "lucide-react"
+import { toast } from "sonner"
+
+import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -12,107 +15,107 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-
-import { Input } from "@/components/ui/input";
-import { formatPhone } from "@/utils/formatPhone";
-import DateTimePicker from "./date-picker";
-import "react-datepicker/dist/react-datepicker.css";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { useCallback, useEffect, useState } from "react";
-import { Label } from "@/components/ui/label";
-import ScheduleTimeList from "./schedule-time-list";
-import { PuffLoader } from "react-spinners";
-import { createNewAppointment } from "../_actions/create-appointment";
-import { toast } from "sonner";
+} from "@/components/ui/select"
+import { Prisma } from "@/generated/prisma"
+import { formatPhone } from "@/utils/formatPhone"
+
+import imageTest from "../../../../../../public/user.png"
+import { createNewAppointment } from "../_actions/create-appointment"
+
+import DateTimePicker from "./date-picker"
+import { AppointmentFormDate, useAppointmentForm } from "./schedule-form"
+import ScheduleTimeList from "./schedule-time-list"
+
+import "react-datepicker/dist/react-datepicker.css"
 
 type UserWithServiceAndSubscription = Prisma.UserGetPayload<{
   include: {
-    subscription: true;
-    services: true;
-  };
-}>;
+    subscription: true
+    services: true
+  }
+}>
 
 interface ScheduleContentProps {
-  clinic: UserWithServiceAndSubscription;
+  clinic: UserWithServiceAndSubscription
 }
 
 export interface TimeSlot {
-  time: string;
-  available: boolean;
+  time: string
+  available: boolean
 }
 
 export default function ScheduleContent({ clinic }: ScheduleContentProps) {
-  const form = useAppointmentForm();
-  const { watch } = form;
+  const form = useAppointmentForm()
+  const { watch } = form
 
-  const selectedDate = watch("date");
-  const selecteServiceId = watch("serviceId");
+  const selectedDate = watch("date")
+  const selecteServiceId = watch("serviceId")
 
-  const [selectedTime, setSelectedTime] = useState("");
-  const [availableTimeSlots, setAvailableTimeSlots] = useState<TimeSlot[]>([]);
-  const [loadingSlots, setLoadingSlots] = useState(false);
-  const [blokedTimes, setBlokedTimes] = useState<string[]>([]);
+  const [selectedTime, setSelectedTime] = useState("")
+  const [availableTimeSlots, setAvailableTimeSlots] = useState<TimeSlot[]>([])
+  const [loadingSlots, setLoadingSlots] = useState(false)
+  const [blokedTimes, setBlokedTimes] = useState<string[]>([])
 
-  //Function for get bloked times (by fetch http)
   const fetchBlockedTimes = useCallback(
     async (date: Date): Promise<string[]> => {
-      setLoadingSlots(true);
+      setLoadingSlots(true)
 
       try {
-        const dateString = date.toISOString().split("T")[0];
+        const dateString = date.toISOString().split("T")[0]
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_URL}/api/schedule/get-appointments?userId=${clinic.id}&date=${dateString}`
-        );
+          `${process.env.NEXT_PUBLIC_URL}/api/schedule/get-appointments?userId=${clinic.id}&date=${dateString}`,
+        )
 
-        const json = await response.json();
-        setLoadingSlots(false);
+        const json = await response.json()
+        setLoadingSlots(false)
 
-        return json;
+        return json
       } catch (err) {
-        console.log(err);
-        setLoadingSlots(false);
-        return [];
+        console.log(err)
+        setLoadingSlots(false)
+        return []
       }
     },
-    [clinic.id]
-  );
+    [clinic.id],
+  )
 
   useEffect(() => {
     if (selectedDate) {
       fetchBlockedTimes(selectedDate).then((bloked) => {
-        setBlokedTimes(bloked);
-        const times = clinic.times || [];
+        setBlokedTimes(bloked)
+        const times = clinic.times || []
 
         const finalSlots = times.map((time) => ({
           time: time,
           available: !bloked.includes(time),
-        }));
+        }))
 
-        setAvailableTimeSlots(finalSlots);
+        setAvailableTimeSlots(finalSlots)
 
         const stillAvailable = finalSlots.find(
-          (slot) => slot.time === selectedTime && slot.available
-        );
+          (slot) => slot.time === selectedTime && slot.available,
+        )
 
         if (!stillAvailable) {
-          setSelectedTime("");
+          setSelectedTime("")
         }
-      });
+      })
     }
-  }, [selectedDate, clinic.times, fetchBlockedTimes, selectedTime]);
+  }, [selectedDate, clinic.times, fetchBlockedTimes, selectedTime])
 
   async function handleRegisterAppointment(formData: AppointmentFormDate) {
     if (!selectedTime) {
-      return;
+      return
     }
 
     const response = await createNewAppointment({
@@ -123,26 +126,26 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
       date: formData.date,
       serviceId: formData.serviceId,
       clinicId: clinic.id,
-    });
+    })
 
     if (response.error) {
-      toast.error(response.error);
-      return;
+      toast.error(response.error)
+      return
     }
 
-    toast.success("Consulta agendada com sucesso!");
-    form.reset();
-    setSelectedTime("");
+    toast.success("Consulta agendada com sucesso!")
+    form.reset()
+    setSelectedTime("")
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-neutral-100">
+    <div className="flex min-h-screen flex-col bg-neutral-100">
       <div className="h-32 bg-cyan-600" />
 
-      <section className="container mx-auto px-4 -mt-16">
-        <div className="max-w-2xl mx-auto">
+      <section className="container mx-auto -mt-16 px-4">
+        <div className="mx-auto max-w-2xl">
           <article className="flex flex-col items-center">
-            <div className="relative h-48 w-48 rounded-full overflow-hidden shadow bg-white mb-8 border-3">
+            <div className="relative mb-8 h-48 w-48 overflow-hidden rounded-full border-3 bg-white shadow">
               <Image
                 src={clinic.image ? clinic.image : imageTest}
                 alt="Foto da clínica"
@@ -151,8 +154,8 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
               />
             </div>
 
-            <h1 className="text-2xl mb-2">{clinic.name}</h1>
-            <div className="flex gap-1 items-center">
+            <h1 className="mb-2 text-2xl">{clinic.name}</h1>
+            <div className="flex items-center gap-1">
               <MapPin />
               <span>
                 {clinic.address ? clinic.address : "Endereço não fornecido"}
@@ -162,12 +165,11 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
         </div>
       </section>
 
-      {/* Form Schedule */}
-      <section className="max-w-2xl mx-auto mt-6 w-full ">
+      <section className="mx-auto mt-6 w-full max-w-2xl">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleRegisterAppointment)}
-            className="space-y-6 p-6 shadow-xl border rounded-md mx-2 bg-white"
+            className="mx-2 space-y-6 rounded-md border bg-white p-6 shadow-xl"
           >
             <FormField
               control={form.control}
@@ -224,8 +226,8 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
                         id="phone"
                         placeholder="(xx) xxxxx-xxxx"
                         onChange={(e) => {
-                          const formattedValue = formatPhone(e.target.value);
-                          field.onChange(formattedValue);
+                          const formattedValue = formatPhone(e.target.value)
+                          field.onChange(formattedValue)
                         }}
                       />
                     </FormControl>
@@ -250,8 +252,8 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
                         className="w-full rounded border bg-neutral-100 p-2"
                         onChange={(date) => {
                           if (date) {
-                            field.onChange(date);
-                            setSelectedTime("");
+                            field.onChange(date)
+                            setSelectedTime("")
                           }
                         }}
                       />
@@ -273,8 +275,8 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
                     <FormControl>
                       <Select
                         onValueChange={(value) => {
-                          field.onChange(value);
-                          setSelectedTime("");
+                          field.onChange(value)
+                          setSelectedTime("")
                         }}
                       >
                         <SelectTrigger className="w-full">
@@ -303,7 +305,7 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
             {selecteServiceId && (
               <div className="space-y-2">
                 <Label className="font-semibold">Horários disponíveis:</Label>
-                <div className="bg-neutral-100 p-2 rounded border">
+                <div className="rounded border bg-neutral-100 p-2">
                   {loadingSlots ? (
                     <div className="flex justify-center">
                       <PuffLoader size={30} color="darkcyan" />
@@ -320,12 +322,12 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
                       selectedDate={selectedDate}
                       requiredSlots={
                         clinic.services.find(
-                          (service) => service.id === selecteServiceId
+                          (service) => service.id === selecteServiceId,
                         )
                           ? Math.ceil(
                               clinic.services.find(
-                                (service) => service.id === selecteServiceId
-                              )!.duration / 30
+                                (service) => service.id === selecteServiceId,
+                              )!.duration / 30,
                             )
                           : 1
                       }
@@ -349,7 +351,7 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
                 Realizar agendamento
               </Button>
             ) : (
-              <p className="bg-red-600 font-medium text-white rounded-md text-center px-4 py-2">
+              <p className="rounded-md bg-red-600 px-4 py-2 text-center font-medium text-white">
                 A clínica esta fechada nesse momento
               </p>
             )}
@@ -357,5 +359,5 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
         </Form>
       </section>
     </div>
-  );
+  )
 }
