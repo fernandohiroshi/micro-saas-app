@@ -14,6 +14,9 @@ const compat = new FlatCompat({
 
 const config = [
   {
+    ignores: ["src/generated/**"],
+  },
+  {
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -28,10 +31,15 @@ const config = [
       prettier: prettierPlugin,
     },
     rules: {
-      "prettier/prettier": ["error", { semi: false }],
+      // Prettier controla essas regras para evitar conflito
+      "prettier/prettier": [
+        "error",
+        { semi: false, singleQuote: false, endOfLine: "auto" },
+      ],
       semi: ["error", "never"],
       quotes: ["error", "double", { avoidEscape: true }],
-      "import/order": "off",
+
+      "import/order": "off", // desliga regra nativa p/ deixar o simple-import-sort fazer o trabalho
       "simple-import-sort/imports": [
         "error",
         {
