@@ -179,7 +179,7 @@ export default function ServiceDialog({
             />
           </div>
 
-          <p className="font-semibold">Tempo de duração do serviço:</p>
+          <p className="font-semibold">Tempo do serviço:</p>
 
           <div className="grid grid-cols-2 gap-4">
             <FormField

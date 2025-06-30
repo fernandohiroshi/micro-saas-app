@@ -62,7 +62,7 @@ export function Header() {
       {status === "loading" ? (
         <PuffLoader size={30} color="darkcyan" />
       ) : session ? (
-        <Button variant="outline" asChild className="font-semibold">
+        <Button asChild className="font-semibold">
           <Link href="/dashboard">Dashboard</Link>
         </Button>
       ) : (

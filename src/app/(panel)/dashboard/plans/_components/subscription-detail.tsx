@@ -39,9 +39,9 @@ export function SubscriptionDetail({ subscription }: SubscriptionDetailProps) {
   return (
     <Card className="mx-auto w-full">
       <CardHeader>
-        <CardTitle className="flex justify-between text-2xl">
-          <div> Seu Plano Atual</div>
-          <div className="animate-pulse rounded-md bg-cyan-500 px-3 py-1 text-lg text-white lg:text-xl">
+        <CardTitle className="flex justify-between">
+          <h2 className="text-lg md:text-2xl"> Seu Plano Atual</h2>
+          <div className="animate-pulse rounded-md bg-cyan-500 px-3 py-1 text-sm text-white lg:text-xl">
             {subscription.status === "active" ? "ATIVO" : "INATIVO"}
           </div>
         </CardTitle>

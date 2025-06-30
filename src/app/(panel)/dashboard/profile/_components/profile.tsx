@@ -125,7 +125,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card>
             <CardHeader>
-              <CardTitle className="text-xl font-bold md:text-2xl">
+              <CardTitle className="text-center text-xl font-bold md:text-start md:text-2xl">
                 Meus dados
               </CardTitle>
             </CardHeader>

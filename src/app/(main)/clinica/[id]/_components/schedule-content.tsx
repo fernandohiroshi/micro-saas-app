@@ -154,10 +154,12 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
               />
             </div>
 
-            <h1 className="mb-2 text-2xl">{clinic.name}</h1>
+            <h1 className="mb-2 line-clamp-1 text-2xl" title={clinic.name!}>
+              {clinic.name}
+            </h1>
             <div className="flex items-center gap-1">
               <MapPin />
-              <span>
+              <span className="line-clamp-1" title={clinic.address!}>
                 {clinic.address ? clinic.address : "Endereço não fornecido"}
               </span>
             </div>
@@ -268,8 +270,8 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
               name="serviceId"
               render={({ field }) => (
                 <div>
-                  <FormItem className="">
-                    <FormLabel className="font-semibold">
+                  <FormItem>
+                    <FormLabel className="line-clamp-1 font-semibold">
                       Selecione o serviço:
                     </FormLabel>
                     <FormControl>
@@ -279,15 +281,18 @@ export default function ScheduleContent({ clinic }: ScheduleContentProps) {
                           setSelectedTime("")
                         }}
                       >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Selecione um serviço" />
+                        <SelectTrigger className="w-full px-2">
+                          <SelectValue
+                            className="line-clamp-1"
+                            placeholder="Selecione um serviço"
+                          />
                         </SelectTrigger>
                         <SelectContent>
                           {clinic.services.map((service) => (
                             <SelectItem
                               key={service.id}
                               value={service.id}
-                              className="text-xs sm:text-sm md:text-base"
+                              className="px-2 text-xs sm:text-sm md:text-base"
                             >
                               {service.name} (
                               {Math.floor(service.duration / 60)}h{" "}

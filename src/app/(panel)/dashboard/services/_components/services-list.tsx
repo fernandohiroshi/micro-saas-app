@@ -58,23 +58,24 @@ export default function ServicesList({
     >
       <section className="mx-auto">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xl font-bold md:text-2xl">
-              Serviços
-            </CardTitle>
+          <CardHeader className="flex flex-col items-center justify-between space-y-0 pb-2 lg:flex-row">
+            <div className="flex w-full items-center justify-between">
+              <CardTitle className="text-xl font-bold md:text-2xl">
+                Serviços
+              </CardTitle>
 
-            {permission.hasPermission && (
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus />
-                </Button>
-              </DialogTrigger>
-            )}
-
+              {permission.hasPermission && (
+                <DialogTrigger asChild>
+                  <Button>
+                    <Plus />
+                  </Button>
+                </DialogTrigger>
+              )}
+            </div>
             {!permission.hasPermission && (
               <Link
                 href="/dashboard/plans"
-                className="animate-pulse text-red-600"
+                className="mt-2 animate-pulse text-red-600"
               >
                 Limite de serviços atingido
               </Link>
@@ -111,22 +112,23 @@ export default function ServicesList({
             </DialogContent>
           </CardHeader>
 
-          <CardContent>
-            <section className="mt-5 space-y-4">
+          <CardContent className="px-2 lg:px-4">
+            <section className="mt-5 space-y-2 lg:space-y-4">
               {servicesList.map((service) => (
                 <article
                   key={service.id}
-                  className="flex items-center justify-between"
+                  className="flex items-center justify-between gap-2"
                 >
-                  <div className="flex items-center space-x-2 text-xs sm:text-sm lg:text-base">
-                    <span className="font-medium">{service.name}</span>
-                    <span className="text-neutral-500">-</span>
-                    <span className="font-medium text-neutral-500">
+                  <div className="flex w-full items-center justify-between space-x-2 text-xs sm:text-sm md:justify-start lg:text-base">
+                    <span className="line-clamp-1 font-medium">
+                      {service.name}
+                    </span>
+                    <span className="flex items-center gap-1 font-medium text-neutral-500">
                       {formatCurrency(service.price / 100)}
                     </span>
                   </div>
 
-                  <div>
+                  <div className="flex items-center justify-end">
                     <Button
                       variant="ghost"
                       size="icon"

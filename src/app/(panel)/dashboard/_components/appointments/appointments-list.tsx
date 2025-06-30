@@ -100,8 +100,8 @@ export function AppointmentsList({ times }: AppointmestListProps) {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xl font-bold md:text-2xl">
+        <CardHeader className="flex flex-col items-center justify-between space-y-0 pb-2 md:flex-row">
+          <CardTitle className="text-lg font-bold md:text-2xl">
             Agendamentos
           </CardTitle>
 
@@ -109,7 +109,7 @@ export function AppointmentsList({ times }: AppointmestListProps) {
         </CardHeader>
 
         <CardContent>
-          <ScrollArea className="h-[calc(100vh-20rem)] pr-4 lg:h-[calc(100vh-15rem)]">
+          <ScrollArea className="h-[calc(100vh-20rem)] pr-1 md:pr-3 lg:h-[calc(100vh-15rem)]">
             {isLoading ? (
               <div className="mt-8 flex items-start justify-center">
                 <PuffLoader size="100px" color="darkcyan" />
@@ -124,15 +124,21 @@ export function AppointmentsList({ times }: AppointmestListProps) {
                       key={slot}
                       className="flex items-center border-t bg-neutral-50 p-2 py-2 last:border-b"
                     >
-                      <div className="w-16 text-sm font-semibold">{slot}</div>
+                      <div className="w-16 text-xs font-semibold lg:text-sm">
+                        {slot}
+                      </div>
 
-                      <div className="flex-1 text-sm text-neutral-700">
-                        <div className="font-semibold">{occupant.name}</div>
-                        <div className="text-neutral-700">{occupant.phone}</div>
+                      <div className="flex-1 text-xs text-neutral-700 lg:text-sm">
+                        <div className="line-clamp-1 font-semibold">
+                          {occupant.name}
+                        </div>
+                        <div className="hidden text-neutral-700 md:block">
+                          {occupant.phone}
+                        </div>
                       </div>
 
                       <div className="ml-auto">
-                        <div className="flex gap-2">
+                        <div className="flex gap-1">
                           <DialogTrigger asChild>
                             <Button
                               variant="ghost"
@@ -163,9 +169,11 @@ export function AppointmentsList({ times }: AppointmestListProps) {
                     key={slot}
                     className="flex items-center border-t p-2 py-2 last:border-b"
                   >
-                    <div className="w-16 text-sm font-semibold">{slot}</div>
+                    <div className="w-16 text-xs font-semibold lg:text-sm">
+                      {slot}
+                    </div>
 
-                    <div className="flex-1 text-sm text-neutral-700">
+                    <div className="flex-1 text-xs text-neutral-700 lg:text-sm">
                       Disponível
                     </div>
                   </div>
